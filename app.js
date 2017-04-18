@@ -1,9 +1,9 @@
 import express from 'express'
 import config from './config'
-import './app/models/index'
+import './core/models/index'
 
 // router
-import routes from './app/routes'
+import routes from './core/routes'
 
 // use middleware
 import use from './common/use'

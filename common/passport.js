@@ -1,7 +1,7 @@
 import passport from 'passport'
 import LocalStrategy from 'passport-local'
 
-import User from '../app/models/user'
+import User from '../core/models/user'
 
 passport.use(new LocalStrategy(User.authenticate()))
 passport.serializeUser(User.serializeUser())
