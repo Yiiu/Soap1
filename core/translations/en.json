@@ -1,0 +1,7 @@
+{
+    "errors": {
+        "user": {
+            "incorrectPasswordAttempts": "Your password is incorrect."
+        }
+    }
+}
