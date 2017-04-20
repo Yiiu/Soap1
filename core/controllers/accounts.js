@@ -29,31 +29,50 @@ export let register = async (req, res) => {
  * @return {[Promise]}
  */
 export let login = async (req, res) => {
-    await User.register(new User({name: req.body.username, email: req.body.email}), req.body.password, (err, account) => {
+    passport.authenticate('local', function(err, user, info) {
         if (err) {
-            respond(res, err)
-        } else {
-            return res.json({
-                message: '注册成功'
-            })
+            return respond(res, [400, {message: req.__('errors.api.accounts.common.loginErrorOccurred'), info: err}])
         }
-    })
+        if (!user) {
+            return respond(res, [400, {message: req.__('errors.api.accounts.password.incorrectPassword')}])
+        }
+        req.logIn(user, function(err) {
+            if (err) {
+                return respond(res, [400, {message: req.__('errors.api.accounts.common.loginErrorOccurred', {info: '登录'}), info: err}])
+            }
+            return res.json({
+                message: req.__('info.api.accounts.common.loginSuccess')
+            })
+        })
+    })(req, res)
 }
 export let Verify = {
     register: async (req, res, next) => {
-        let err = req.__('errors').api.accounts
         if (!req.body.username || !validator.isLength(req.body.username, {min:1, max: undefined})) {
-            return res.status(401).json({message: err.name.correctUserName})
+            return res.status(401).json({message: req.__('errors.api.accounts.name.correctUserName')})
         }
         if (!req.body.email || !validator.isLength(req.body.email, {min:3, max: undefined})) {
-            return res.status(401).json({message: err.email.emailCanNotBeBlank})
+            return res.status(401).json({message: req.__('errors.api.accounts.email.emailCanNotBeBlank')})
         } else if (!validator.isEmail(req.body.email)) {
-            return res.status(401).json({message: err.email.correctEmail})
+            return res.status(401).json({message: req.__('errors.api.accounts.email.correctEmail')})
         }
         if (!req.body.password || !validator.isLength(req.body.password, {min:6, max: 16})) {
-            return res.status(401).json({message: err.email.correctUserName})
+            return res.status(401).json({message: req.__('errors.api.accounts.password.passwordDoesNotComplyLength')})
         }
 
         next()
+    },
+    login: async (req, res, next) => {
+        if (!validator.isLength(req.body.username, {min:1, max: undefined})) {
+            return res.status(401).json({message: req.__('errors.api.accounts.name.correctUserName')})
+        } else {
+            let i = await User.findOne({name: req.body.username})
+            if (!i) {
+                return res.status(401).json({message: req.__('errors.api.accounts.name.noUserFound')})
+            }
+        }
+        if (!validator.isLength(req.body.password, {min:6, max: 16})) {
+            return res.status(401).json({message: req.__('errors.api.accounts.password.passwordDoesNotComplyLength')})
+        }
     }
 }

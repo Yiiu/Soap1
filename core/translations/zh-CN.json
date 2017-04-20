@@ -2,6 +2,9 @@
     "errors": {
         "api": {
             "accounts": {
+                "common": {
+                    "loginErrorOccurred": "登录时发生错误"
+                },
                 "password": {
                     "incorrectPassword": "很抱歉，密码有误，请检查密码。",
                     "passwordCanNotBeBlank": "密码不能为空。",
@@ -15,6 +18,15 @@
                 "email": {
                     "correctEmail": "请填写正确的邮箱。",
                     "emailCanNotBeBlank": "邮箱不能为空。"
+                }
+            }
+        }
+    },
+    "info": {
+        "api": {
+            "accounts": {
+                "common": {
+                    "loginSuccess": "{{info}}成功。"
                 }
             }
         }
