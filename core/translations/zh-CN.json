@@ -13,11 +13,13 @@
                 "name": {
                     "correctUserName": "请填写正确的用户名。",
                     "noUserFound": "没有查找到用户名。",
-                    "userCanNotBeBlank": "用户名不能为空。"
+                    "userCanNotBeBlank": "用户名不能为空。",
+                    "userNameExists": "用户名已存在"
                 },
                 "email": {
                     "correctEmail": "请填写正确的邮箱。",
-                    "emailCanNotBeBlank": "邮箱不能为空。"
+                    "emailCanNotBeBlank": "邮箱不能为空。",
+                    "emailExists": "邮箱已存在"
                 }
             }
         }
@@ -26,7 +28,9 @@
         "api": {
             "accounts": {
                 "common": {
-                    "loginSuccess": "{{info}}成功。"
+                    "loginSuccess": "登陆成功。",
+                    "registerSuccess": "登陆成功。",
+                    "logged": "已登陆"
                 }
             }
         }

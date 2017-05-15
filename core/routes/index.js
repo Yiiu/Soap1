@@ -15,6 +15,10 @@ const app = next({
 const handler = routes.getRequestHandler(app)
 
 export default (server) => {
+    /*
+    server
+        .use('/api', api)
+     */
     app.prepare()
         .then(() => 
             server

@@ -1,5 +1,5 @@
 import mongoose from 'mongoose'
-import config from '../../config/mongodb'
+import { mongo as config } from '../../config'
 
 mongoose.connect(`mongodb://${config.username}:${config.pwd}@${config.host}:${config.port}/${config.db}`)
 

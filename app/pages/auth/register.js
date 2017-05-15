@@ -3,8 +3,9 @@ import axios from 'axios'
 
 function get () {
     axios.post('/api/register', {
-        username: 'Fred',
-        password: 'Flintstone'
+        username: 'asd',
+        password: 'Flintstone',
+        email: 'test@gmail.com'
     })
         .then(e => {
             console.log(e)

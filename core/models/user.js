@@ -9,12 +9,10 @@ let userSchema = new Schema({
     },
     name: {
         type: String,
-        unique: true,
-        index: 1
+        unique: true
     },
     email: {
-        type: String,
-        index: 1
+        type: String
     },
     url: {
         type: String
@@ -50,7 +48,7 @@ let userSchema = new Schema({
 })
 
 userSchema.plugin(passportLocalMongoose, {
-    usernameField: 'nickname',
+    usernameField: 'name',
     limitAttempts: true
 })
 
