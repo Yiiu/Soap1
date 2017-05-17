@@ -1,7 +1,7 @@
 # Logs
 logs
 .idea/
-.next/
+.nuxt/
 *.log
 npm-debug.log*
 uploads
