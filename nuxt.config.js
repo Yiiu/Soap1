@@ -9,6 +9,18 @@ function relative (path) {
 export default {
     cache: true,
     srcDir: relative('./app'),
+    build: {
+        vendor: ['axios']
+    },
+    plugins: [
+        {
+            src: '~plugins/components',
+            ssr: false
+        },
+        {
+            src: '~plugins/axios.js'
+        }
+    ],
     css: [
         {
             src: '~assets/styles/basics.less',
@@ -23,6 +35,9 @@ export default {
         title: 'Soap',
         meta: [
             { charset: 'utf-8' }
+        ],
+        link: [
+            { rel: 'stylesheet', href: '//at.alicdn.com/t/font_2l68ury1eyfa8aor.css' }
         ]
     },
 }

@@ -9,9 +9,18 @@
             <nav>
 
             </nav>
-            <section class="info">
+            <section class="log" v-if="!userInfo">
+                <nuxt-link to="/login">
+                    登录
+                </nuxt-link>
                 <nuxt-link to="/signup">
                     注册
+                </nuxt-link>
+            </section>
+            <section class="info" v-else>
+                <i class="iconfont icon-xiaoxizhongxin"></i>
+                <nuxt-link :to="`/${userInfo.username}`">
+                    <i class="iconfont icon-wode"></i>
                 </nuxt-link>
             </section>
         </main>
@@ -20,6 +29,11 @@
 <script>
  import Logo from '~components/logo'
  export default {
+     computed: {
+         userInfo () {
+             return this.$store.state.user.authUser
+         }
+     },
      components: {
          Logo
      }
@@ -48,13 +62,17 @@ header {
         }
         section.logo {
             font-size: 24px;
-            width: 39px;
-            height: 35px;
+            width: 32px;
+            height: 32px;
             img {
                 width: 48px;
             }
         }
         section.info {
+            i.iconfont {
+                font-size: 30px;
+                margin-left: 12px;
+            }
         }
     }
     nav {

@@ -1,7 +1,6 @@
 import { User } from '../models'
 import respond from '../middleware/respond'
 import validator from 'validator'
-import passport from '../../common/passport'
 /** 
  * 注册用户
  * 
@@ -10,7 +9,8 @@ import passport from '../../common/passport'
  * @return {[Promise]}
  */
 export let register = async (req, res) => {
-    await User.register(new User({name: req.body.username, email: req.body.email}), req.body.password, (err, account) => {
+    let user = await new User({username: req.body.username, email: req.body.email})
+    await User.register(user, req.body.password, (err, account) => {
         if (err) {
             respond(res, err)
         } else {
@@ -103,8 +103,7 @@ export let Verify = {
                 }
             ])
         }
-
-        if (User.findOne({name: req.body.username})) {
+        if (await User.findOne({username: req.body.username})) {
             return respond(res, [
                 400,
                 {
@@ -113,7 +112,7 @@ export let Verify = {
             ])
         }
 
-        if (User.findOne({email: req.body.email})) {
+        if (await User.findOne({email: req.body.email})) {
             return respond(res, [
                 400,
                 {
@@ -141,7 +140,7 @@ export let Verify = {
                 }
             ])
         } else {
-            let i = await User.findOne({name: req.body.username})
+            let i = await User.findOne({username: req.body.username})
             if (!i) {
                 return respond(res, [
                     400,

@@ -1,6 +1,14 @@
 {
+    "restartable": "rs",
+    "verbose": true,
     "watch": [
-        "app/pages/",
-        "core/"
-    ]
+        " nuxt.config.js",
+        "core/*",
+        "config.js",
+        "common/*",
+        "app.js"
+    ],
+    "execMap": {
+        "js": "node --harmony"
+    }
 }

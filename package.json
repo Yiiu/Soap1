@@ -4,7 +4,7 @@
   "description": "soap",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon -w core/* -w universal -w yarn.lock -w next.config.js -w config.js -w package.json start",
+    "dev": "nodemon start.js",
     "start": "cross-env NODE_ENV=production nodemon start.js"
   },
   "devDependencies": {
@@ -23,6 +23,7 @@
     "express": "^4.15.2",
     "express-session": "^1.15.2",
     "i18n": "^0.8.3",
+    "jsonwebtoken": "^7.4.1",
     "less": "^2.7.2",
     "less-loader": "^4.0.3",
     "log4js": "^1.1.1",

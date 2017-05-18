@@ -2,16 +2,16 @@ import bodyParser from 'body-parser'
 import morgan from 'morgan'
 import i18n from '../core/i18n'
 import session from 'express-session'
-import passport from '../common/passport'
 import { mongo as mongoConfig } from '../config'
 const MongoStore = require('connect-mongo')(session)
 
 export default (app) => {
     // Node.js body parsing middleware.
+    app.set('secret', 'soap')
     app.use(bodyParser.json())
     app.use(morgan('dev'))
     app.use(session({
-        secret: 'soap',
+        secret: app.get('secret'),
         resave: false,
         saveUninitialized: false,
         store: new MongoStore({
@@ -21,6 +21,4 @@ export default (app) => {
     }))
 
     app.use(i18n.init)
-    app.use(passport.initialize())
-    app.use(passport.session())
 }

@@ -1,5 +1,5 @@
 import mongoose from './mongoose'
-import passportLocalMongoose from 'passport-local-mongoose'
+import Plugins from '../plugins/user'
 
 let Schema = mongoose.Schema
 
@@ -7,7 +7,7 @@ let userSchema = new Schema({
     nickname: {
         type: String
     },
-    name: {
+    username: {
         type: String,
         unique: true
     },
@@ -47,12 +47,13 @@ let userSchema = new Schema({
     }
 })
 
-userSchema.plugin(passportLocalMongoose, {
-    usernameField: 'name',
-    limitAttempts: true
+userSchema.plugin(Plugins)
+
+
+userSchema.pre('save', async function (next) {
+    this.nickname = this.username
+    next()
 })
 
-
 let user = mongoose.model('user', userSchema)
-
 export default user

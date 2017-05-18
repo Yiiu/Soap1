@@ -1,0 +1,33 @@
+.notify-box {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  .notify {
+    position: absolute;
+    top:0;
+    width: 100%;
+    padding: 12px;
+    text-align: center;
+    &.info {
+      background: fade(#7ec2f3, 90%);
+      color: #fff;
+    }
+    &.success {
+      background: fade(#76d0a3, 90%);
+      color: #fff;
+    }
+    &.warning {
+      background: fade(#f46e65, 90%);
+      color: #fff;
+    }
+  }
+}
+
+.notification-list-enter-active, .notification-list-leave-active {
+  transition: all .4s;
+}
+.notification-list-enter, .notification-list-leave-active {
+  opacity: 0;
+  transform: translateY(-100%);
+}

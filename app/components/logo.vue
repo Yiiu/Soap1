@@ -1,14 +1,12 @@
 <template>
-    <svg class="" viewBox="0 0 226 200" version="1.1" xmlns="http://www.w3.org/2000/svg" data-jsx="516370991">
-        <defs data-jsx="516370991">
-            <linearGradient x1="196.572434%" y1="228.815483%" x2="50%" y2="50%" id="l1" data-jsx="516370991">
-                <stop offset="0%" data-jsx="516370991"></stop><stop offset="100%" data-jsx="516370991"></stop>
+    <svg class="" viewBox="0 0 284 284" version="1.1" xmlns="http://www.w3.org/2000/svg">
+        <g>
+            <linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="141.73" y1="3.9387" x2="141.73" y2="1245.944">
+                <stop  offset="0" style="stop-color:#000000"/>
+                <stop  offset="1" style="stop-color:#ffffff;stop-opacity:0"/>
             </linearGradient>
-        </defs>
-        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" data-jsx="516370991">
-            <g transform="translate(-141.000000, -156.000000)" fill="url(#l1)" data-jsx="516370991">
-                <polygon points="254 156.459299 367 356 141 356 " data-jsx="516370991"></polygon>
-            </g>
+            <path style="fill:url(#SVGID_1_);" d="M137.4,279.1l-133-133c-2.4-2.4-2.4-6.3,0-8.7l133-133c2.4-2.4,6.3-2.4,8.7,0l133,133
+		c2.4,2.4,2.4,6.3,0,8.7l-133,133C143.7,281.5,139.8,281.5,137.4,279.1z"/>
         </g>
     </svg>
 </template>
