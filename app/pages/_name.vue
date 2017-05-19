@@ -4,8 +4,7 @@
 <script>
 export default {
     fetch ({store, params, req}) {
-        // console.log(req)
-        store.dispatch('userInfo/getOneInfo')
+        // store.dispatch('userInfo/getOneInfo')
     }
 }
 </script>

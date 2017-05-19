@@ -5,17 +5,32 @@ let Schema = mongoose.Schema
 
 let userSchema = new Schema({
     nickname: {
-        type: String
+        type: String,
+        default: null
+    },
+    hash: {
+        type: String,
+        default: null
+    },
+    salt: {
+        type: String,
+        default: null
+    },
+    login_at: {
+        type: Date,
+        default: Date.now
     },
     username: {
         type: String,
         unique: true
     },
     email: {
-        type: String
+        type: String,
+        default: null
     },
     url: {
-        type: String
+        type: String,
+        default: null
     },
     description: {      // 简介
         type: String,
@@ -46,7 +61,6 @@ let userSchema = new Schema({
         default: null
     }
 })
-
 userSchema.plugin(Plugins)
 
 

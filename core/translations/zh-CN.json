@@ -3,7 +3,8 @@
         "api": {
             "accounts": {
                 "common": {
-                    "loginErrorOccurred": "登录时发生错误"
+                    "loginErrorOccurred": "登录时发生错误",
+                    "authenticationFailed": "认证失败"
                 },
                 "password": {
                     "incorrectPassword": "很抱歉，密码有误，请检查密码。",

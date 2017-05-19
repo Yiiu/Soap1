@@ -12,10 +12,8 @@ const install = (Vue) => {
             let title = options
             options = {}
             options.content = title
-            options.type = type
-        } else {
-            options.type = type
         }
+        options.type = type || null
 
         Notification(options)
     }

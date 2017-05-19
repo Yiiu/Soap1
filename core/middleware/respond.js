@@ -1,11 +1,13 @@
 function err (res, status) {
-    console.error(status)
     if (status instanceof Array) {
         res.status(status[0]).json(status[1])
+        console.error(status[1])
     } else if (status instanceof Object) {
         res.status(400).json(status)
+        console.error(status)
     } else {
         res.status(400).json({message: status})
+        console.error({message: status})
     }
 }
 

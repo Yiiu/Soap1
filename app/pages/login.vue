@@ -28,11 +28,11 @@
         methods: {
             async handleClickLogin () {
                 try {
-                    let data = await this.$store.dispatch('user/login', {
+                    console.log(this.$store)
+                    let data = await this.$store.dispatch('login', {
                         username: this.name,
                         password: this.password
                     })
-                    console.log(data)
                     this.$notify.success(data.message)
                     this.$router.replace('/')
                 } catch (error) {
