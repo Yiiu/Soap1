@@ -20,7 +20,7 @@ process.on('SIGINT', () => {
     process.exit()
 })
 
-app.listen(config.port, function(){
+app.listen(config.port, () => {
     console.log(`port ${config.port}!`)
-    console.log(`biu~`)
+    console.log('biu~')
 })
