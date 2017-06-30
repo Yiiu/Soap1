@@ -1,15 +1,15 @@
 import { User } from '../models'
 import respond from '../middleware/respond'
 import validator from 'validator'
-/** 
+/**
  * 注册用户
- * 
+ *
  * @param  {[req]}
  * @param  {[res]}
  * @return {[Promise]}
  */
-export let register = async (req, res) => {
-    let user = await new User({username: req.body.username, email: req.body.email})
+export let signup = async (req, res) => {
+    let user = await new User({ username: req.body.username, email: req.body.email })
     try {
         await User.register(user, req.body.password)
     } catch (error) {
@@ -18,8 +18,9 @@ export let register = async (req, res) => {
             error
         ])
     }
+    console.log(user)
     res.json({
-        message: req.__('info.api.accounts.common.registerSuccess')
+        message: '注册成功'
     })
 }
 
@@ -30,9 +31,9 @@ export let logout = async (req, res) => {
     })
 }
 
-/** 
+/**
  * 登录
- * 
+ *
  * @param  {[req]}
  * @param  {[res]}
  * @return {[Promise]}
@@ -58,9 +59,9 @@ export let login = async (req, res) => {
     })
 }
 export let Verify = {
-    register: async (req, res, next) => {
-        if (!req.body.username || !validator.isLength(req.body.username, {min:1, max: undefined})) {
-            return respond(res, req.__('errors.api.accounts.name.correctUserName'))
+    signup: async (req, res, next) => {
+        if (!req.body.username || !validator.isLength(req.body.username, { min:1, max: undefined })) {
+            return respond(res, '用户已存在')
         }
         if (!req.body.email || !validator.isLength(req.body.email, {min:3, max: undefined})) {
             return respond(res, req.__('errors.api.accounts.email.emailCanNotBeBlank'))

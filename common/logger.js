@@ -18,3 +18,4 @@ if (!process.env.NODE_ENV === 'production') {
 var logger = log4js.getLogger('cheese')
 
 logger.setLevel('ERROR')
+export default logger

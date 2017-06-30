@@ -8,6 +8,7 @@ let userSchema = new Schema({
         type: String,
         default: null
     },
+    // 密码加密
     hash: {
         type: String,
         default: null
@@ -61,6 +62,7 @@ let userSchema = new Schema({
         default: null
     }
 })
+
 userSchema.plugin(Plugins)
 
 
