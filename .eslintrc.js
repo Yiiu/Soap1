@@ -15,7 +15,7 @@ module.exports = {
         "no-console": 0,
         "indent": [
             "error",
-            4
+            2
         ],
         "linebreak-style": [
             "error",
@@ -30,7 +30,7 @@ module.exports = {
             "never"
         ],
         "no-confusing-arrow": 0,
-        "babel/new-cap": ["error", { "newIsCap": false }],
+        "babel/new-cap": ["error", { "capIsNew": false ,"newIsCap": false }],
         "babel/object-curly-spacing": 1,
         "babel/no-invalid-this": 1,
         "babel/semi": ["error", "never"],

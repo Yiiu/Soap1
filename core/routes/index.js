@@ -1,6 +1,7 @@
 import api from './api'
-export default (server) => {
-    server
-        .use('/api', api)
-    // view(server)
-}
+import express from 'express'
+
+const router = express.Router()
+router.use('/api', api)
+
+export default router

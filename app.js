@@ -13,21 +13,24 @@ import use from './common/use'
 const app = new express()
 
 use(app)
-routes(app)
+app.use(routes)
+app.use(function (err, req, res, next) {
+  console.log(1, err)
+})
 
 soap()
-    .then(() => {
-        app.listen(config.port, () => {
-            console.log(`biu~启动好啦，在${config.port}端口`)
-            console.log('------------------------------------')
-        })
+  .then(() => {
+    app.listen(config.port, () => {
+      console.log(`biu~启动好啦，在${config.port}端口`)
+      console.log('------------------------------------')
     })
-    .catch(err => {
-        console.error(err)
-        process.exit(-1)
-    })
+  })
+  .catch(err => {
+    console.error(err)
+    process.exit(-1)
+  })
 
 process.on('SIGINT', () => {
-    console.log('bye~')
-    process.exit()
+  console.log('bye~')
+  process.exit()
 })
