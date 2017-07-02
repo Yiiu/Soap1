@@ -1,8 +1,9 @@
 import jwt from 'jsonwebtoken'
-import User from '../models/user'
+import User from 'core/models/user'
 import crypto from 'crypto'
+import { isEmail } from 'validator'
 import { filterObj } from 'core/util'
-import respond from '../middleware/respond'
+import respond from 'core/middleware/respond'
 import config from 'config'
 let userArr = ['_id', 'nickname', 'username', 'email', 'location', 'website', 'created_at', 'updated_at', 'login_at', 'cover', 'avatar', 'description']
 export default async function (schema) {
@@ -11,9 +12,8 @@ export default async function (schema) {
       user = new this(user)
     }
     let userInfo = await this.findByUsername(user.username)
-    if (userInfo) throw 'userExists'
-    await user.setPassword(user, pwd)
-    return true
+    if (userInfo) throw new Error('exist_username')
+    return await user.setPassword(user, pwd)
   }
   // 模型的用户名查找方法
   schema.statics.findByUsername = async function (userName) {
@@ -29,11 +29,17 @@ export default async function (schema) {
     await user.save()
     return true
   }
-  schema.statics.login = async function (userName, pwd) {
-    let userInfo = await this.findOne({ username: userName })
+  schema.statics.login = async function (username, pwd) {
+    let userInfo
+    if (isEmail(username)) {
+      userInfo = await this.findOne({ email: username })
+    } else {
+      userInfo = await this.findOne({ username: username })
+    }
+    if (!userInfo) throw new Error('exist_userOrEmail')
     let salt = userInfo.salt
     let hash = await crypto.pbkdf2Sync(pwd, salt, 23333, 32, 'sha512').toString('hex')
-    if (hash !== userInfo.hash) throw 'pwdIncorrect'
+    if (hash !== userInfo.hash) throw new Error('exist_password')
 
     let token = jwt.sign({
       id: userInfo._id
@@ -42,11 +48,7 @@ export default async function (schema) {
     })
     userInfo.login_at = Date.now()
     userInfo.save()
-    let data = filterObj(userInfo, userArr)
-    return {
-      token: token,
-      data: data
-    }
+    return token
   }
   schema.statics.authenticate = async function (req, res, next) {
     try {

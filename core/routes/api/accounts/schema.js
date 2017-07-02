@@ -19,6 +19,23 @@ const schema = {
         password: { alias: 'password', type: 'string', minLength: 6, maxLength: 18, error: 'invalid_password' }
       }
     }
+  },
+  token: {
+    sanitization: {
+      type: 'object',
+      strict: true,
+      properties: {
+        userOrEmail: { type: 'string' },
+        password: { type: 'string', rules: ['trim'] }
+      }
+    },
+    validation: {
+      type: 'object',
+      properties: {
+        userOrEmail: { alias: 'username', type: 'string', minLength: 1, error: 'invalid_username' },
+        password: { alias: 'password', type: 'string', minLength: 6, maxLength: 18, error: 'invalid_password' }
+      }
+    }
   }
 }
 

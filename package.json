@@ -36,9 +36,6 @@
     "morgan": "^1.8.1",
     "nuxt": "^0.10.7",
     "omit": "^1.0.1",
-    "passport": "^0.3.2",
-    "passport-local": "^1.0.0",
-    "passport-local-mongoose": "^4.0.0",
     "raw-loader": "^0.5.1",
     "schema-inspector": "^1.6.8",
     "validator": "^7.0.0"

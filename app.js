@@ -15,7 +15,13 @@ const app = new express()
 use(app)
 app.use(routes)
 app.use(function (err, req, res, next) {
-  console.log(1, err)
+  console.log(err)
+  if (err instanceof Error) {
+    res.status(400).json({
+      message: err.message,
+      stack: err.stack.split('\n')
+    })
+  }
 })
 
 soap()

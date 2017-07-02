@@ -8,7 +8,7 @@ export default function validator (schema) {
     inspector.sanitize(sanitization, data)
     let result = inspector.validate(validation, data)
     if (!result.valid) {
-      throw result.error
+      throw new Error(result.error[0].message)
     }
   }
 }
