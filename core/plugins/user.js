@@ -1,9 +1,8 @@
 import jwt from 'jsonwebtoken'
 import User from 'core/models/user'
 import crypto from 'crypto'
-import { isEmail } from 'validator'
 import { filterObj } from 'core/util'
-import respond from 'core/middleware/respond'
+import { isEmail } from 'validator'
 import config from 'config'
 let userArr = ['_id', 'nickname', 'username', 'email', 'location', 'website', 'created_at', 'updated_at', 'login_at', 'cover', 'avatar', 'description']
 export default async function (schema) {
@@ -50,18 +49,8 @@ export default async function (schema) {
     userInfo.save()
     return token
   }
-  schema.statics.authenticate = async function (req, res, next) {
-    try {
-      let token = req.cookies.token || req.headers.authorization
-      await jwt.verify(token, config.secret)
-    } catch (error) {
-      return respond(res, [401, 'error'])
-    }
-    next()
-  }
-  schema.statics.getUserInfo = async function (token) {
-    let info = await jwt.verify(token, config.secret)
-    let userInfo = await User.findById(info.id)
-    return userInfo
+  schema.statics.fetch = async function (id) {
+    let info = await User.findById(id)
+    return filterObj(info, userArr)
   }
 }

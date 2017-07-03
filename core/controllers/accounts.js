@@ -1,5 +1,4 @@
 import { User } from 'core/models'
-import respond from 'core/middleware/respond'
 /**
  * 注册用户
  *
@@ -38,33 +37,5 @@ export let logout = async (req, res) => {
   req.logout()
   res.json({
     message: '退出成功'
-  })
-}
-
-/**
- * 登录
- *
- * @param  {[req]}
- * @param  {[res]}
- * @return {[Promise]}
- */
-export let login = async (req, res) => {
-  let info
-  try {
-    info = await User.login(req.body.username, req.body.password)
-  } catch (error) {
-    if (error === 'pwdIncorrect') {
-      return respond(res, req.__('errors.api.accounts.password.incorrectPassword'))
-    } else {
-      return respond(res, error)
-    }
-  }
-  res.cookie('token', info.token, {
-    httpOnly: true
-  })
-  return res.json({
-    message: req.__('info.api.accounts.common.loginSuccess'),
-    token: info.token,
-    data: info.data
   })
 }
