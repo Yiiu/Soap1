@@ -14,9 +14,9 @@ const schema = {
     validation: {
       type: 'object',
       properties: {
-        username: { alias: 'username', type: 'string', minLength: 1, error: 'invalid_username' },
-        email: { alias: 'email', type: 'string', pattern: 'email', error: 'invalid_email' },
-        password: { alias: 'password', type: 'string', minLength: 6, maxLength: 18, error: 'invalid_password' }
+        username: { type: 'string', minLength: 1, error: 'invalid_username' },
+        email: { type: 'string', pattern: 'email', error: 'invalid_email' },
+        password: { type: 'string', minLength: 6, maxLength: 18, error: 'invalid_password' }
       }
     }
   },
@@ -32,8 +32,8 @@ const schema = {
     validation: {
       type: 'object',
       properties: {
-        userOrEmail: { alias: 'username', type: 'string', minLength: 1, error: 'invalid_username' },
-        password: { alias: 'password', type: 'string', minLength: 6, maxLength: 18, error: 'invalid_password' }
+        userOrEmail: { type: 'string', minLength: 1, error: 'invalid_username' },
+        password: { type: 'string', minLength: 6, maxLength: 18, error: 'invalid_password' }
       }
     }
   }

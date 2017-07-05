@@ -53,4 +53,11 @@ export default async function (schema) {
     let info = await User.findById(id)
     return filterObj(info, userArr)
   }
+
+  schema.statics.getUserInfo = async function (username) {
+    let info = await User
+      .findOne({ username: username })
+      .select('nickname username description avatar followers following website location photos')
+    return info
+  }
 }

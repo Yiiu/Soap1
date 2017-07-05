@@ -8,7 +8,16 @@ export default function validator (schema) {
     inspector.sanitize(sanitization, data)
     let result = inspector.validate(validation, data)
     if (!result.valid) {
-      throw new Error(result.error[0].message)
+      let err = {}
+      result.error.forEach(error => {
+        let name = error.property.match(/@\.(\w+)/)[1]
+        err[name] = {
+          reason: error.reason,
+          message: error.message,
+          code: error.code
+        }
+      })
+      throw err
     }
   }
 }

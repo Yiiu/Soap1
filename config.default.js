@@ -13,6 +13,12 @@ const config = {
       client_id: 111,
       client_secret: 111
     }
+  },
+  qn: {
+    accessKey: '123123',
+    secretKey: '123123',
+    bucket: '1',
+    origin: 'up.qiniu.com'
   }
 }
 export const mongo = config.mongodb
