@@ -5,10 +5,6 @@ let Schema = mongoose.Schema
 let ObjectId = Schema.Types.ObjectId
 
 let photoSchema = new Schema({
-  title: {
-    type: String,
-    default: ''
-  },
   links: {
     type: String
   },
@@ -18,22 +14,21 @@ let photoSchema = new Schema({
   exif: {
     type: Object
   },
+  image: {
+    type: Object
+  },
   width: {
     type: String
   },
   height: {
     type: String
   },
-  tags: {
+  tags: [{
     type: Object
-  },
+  }],
   user: {
     type: ObjectId,
     ref: 'user'
-  },
-  description: {    // 简介
-    type: String,
-    default: '这个人很懒，啥也没留下。。。'
   },
   created_at: {
     type: Date,

@@ -1,44 +1,49 @@
 import express from 'express'
-import uid from 'uid-safe'
-import { isAuthenticated } from 'core/middleware'
 import multer from 'multer'
 import bytes from 'bytes'
-import qn from 'qn'
-import config from 'config'
-import signature from 'cookie-signature'
+import exif from 'exif'
+
+import { Photo } from 'core/models'
+import { isUserLogger, uploadImage } from 'core/middleware'
+
+const ExifImage = exif.ExifImage
+
 const router = express.Router()
 const storage = multer.memoryStorage()
 
 const upload = multer({
-  storage: storage
+  storage: storage,
+  fileFilter: function(req, files, callback) {
+    var type = '|' + files.mimetype.slice(files.mimetype.lastIndexOf('/') + 1) + '|'
+    console.log(type)
+    var fileTypeValid = '|jpg|png|jpeg|gif|arw|'.indexOf(type) !== -1
+    callback(null, !!fileTypeValid)
+  }
 })
 
-router.post('/', upload.single('image'), async function(req, res, next) {
-  if (req.file && req.file.buffer) {
-    console.log(req.file)
-    // 上传到七牛
-    let client = qn.create(config.qn)
-    client.upload(req.file.buffer, {
-      key: await uid(18)
-    }, function(err, result) {
-      console.log(err, result)
+router.post('/', isUserLogger, upload.single('image'), async function (req, res, next) {
+  try {
+    let imageInfo
+    ExifImage({ image : req.file.buffer }, (err, obj) => {
       if (err) {
-        return res.json({
-          code: 1,
-          msg: '上传失败！',
-          data: {
-            src: ''
-          }
-        })
+        throw err
       }
-      res.json({
-        code: 0,
-        msg: '上传成功！',
-        data: {
-          src: result.url + '?imageslim'
-        }
-      })
+      imageInfo = obj
     })
+    if (req.file && req.file.buffer) {
+      let info = await uploadImage(req.file.buffer)
+      let photo = await new Photo({
+        links: `//${info.url}`,
+        exif: imageInfo.exif,
+        image: imageInfo.image,
+        user: req.userInfo._id
+      })
+      res.json(photo)
+    } else {
+      throw new Error('no_image')
+    }
+  } catch (err) {
+    next(err)
   }
 })
 
