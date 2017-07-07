@@ -1,6 +1,5 @@
 import express from 'express'
 import multer from 'multer'
-import bytes from 'bytes'
 import exif from 'exif'
 
 import { Photo } from 'core/models'
@@ -15,8 +14,12 @@ const upload = multer({
   storage: storage,
   fileFilter: function(req, files, callback) {
     var type = '|' + files.mimetype.slice(files.mimetype.lastIndexOf('/') + 1) + '|'
-    console.log(type)
-    var fileTypeValid = '|jpg|png|jpeg|gif|arw|'.indexOf(type) !== -1
+    var fileTypeValid = '|jpg|png|jpeg|gif|'.indexOf(type) !== -1
+    if (fileTypeValid) {
+      callback(null, true)
+    } else {
+      callback(new Error('invalid_imagetype'))
+    }
     callback(null, !!fileTypeValid)
   }
 })
@@ -38,7 +41,8 @@ router.post('/', isUserLogger, upload.single('image'), async function (req, res,
         image: imageInfo.image,
         user: req.userInfo._id
       })
-      res.json(photo)
+      let photoSave = await Photo.create(photo)
+      res.json(photoSave)
     } else {
       throw new Error('no_image')
     }

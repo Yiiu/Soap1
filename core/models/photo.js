@@ -17,12 +17,6 @@ let photoSchema = new Schema({
   image: {
     type: Object
   },
-  width: {
-    type: String
-  },
-  height: {
-    type: String
-  },
   tags: [{
     type: Object
   }],
