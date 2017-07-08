@@ -67,9 +67,10 @@ let userSchema = new Schema({
     type: String,
     default: null
   },
-  photos:[{
-    type: ObjectId
-  }]
+  photos: {
+    type: Number,
+    default: 0
+  }
 })
 
 userSchema.plugin(Plugins)

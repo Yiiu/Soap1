@@ -1,11 +1,11 @@
 import jwt from 'jsonwebtoken'
-import User from 'core/models/user'
+import { User, Photo } from 'core/models'
 import crypto from 'crypto'
 import { filterObj } from 'core/util'
 import { isEmail } from 'validator'
 import config from 'config'
-let userArr = ['_id', 'nickname', 'username', 'email', 'location', 'website', 'created_at', 'updated_at', 'login_at', 'cover', 'avatar', 'description']
-export default async function (schema) {
+let userSelect = 'nickname username description avatar followers following website location photos'
+export default function (schema) {
   schema.statics.signup = async function (user, pwd) {
     if (!(user in this)) {
       user = new this(user)
@@ -54,10 +54,18 @@ export default async function (schema) {
     return filterObj(info, userArr)
   }
 
-  schema.statics.getUserInfo = async function (username) {
+  schema.statics.getUserInfo = async function (id) {
     let info = await User
-      .findOne({ username: username })
-      .select('nickname username description avatar followers following website location photos')
+      .findById(id)
+      .select(userSelect)
+    return info
+  }
+
+  schema.statics.getUserPhotos = async function (id) {
+    let info = await Photo
+      .find({ user: id })
+      .sort('_id')
+      .populate({ path: 'user', select: userSelect })
     return info
   }
 }
