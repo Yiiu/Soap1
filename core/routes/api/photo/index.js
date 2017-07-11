@@ -19,15 +19,16 @@ router
   .post('/photos', addPhoto, async (req, res, next) => {
     try {
       const { user, photoInfo} = req
-      if (!req.photoInfo) {
+      if (!photoInfo) {
         throw new Error('error_download')
       }
-      let photo = await new Photo({ ...photoInfo, user: user._id}).save()
-      await User.update({
-        _id: user._id
-      }, {
-        $inc: { photos: 1 }
-      })
+      console.log(photoInfo)
+      // let photo = await new Photo({ ...photoInfo, user: user._id}).save()
+      // await User.update({
+      //   _id: user._id
+      // }, {
+      //   $inc: { photos: 1 }
+      // })
       res.json(photo)
     } catch (error) {
       next(error)

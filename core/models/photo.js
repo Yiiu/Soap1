@@ -17,6 +17,14 @@ let photoSchema = new Schema({
   image: {
     type: Object
   },
+  width: {
+    type: Number,
+    default: 0
+  },
+  height: {
+    type: Number,
+    default: 0
+  },
   tags: [{
     type: Object
   }],

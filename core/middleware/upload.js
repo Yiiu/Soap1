@@ -32,7 +32,7 @@ export async function addPhoto (req, res, next) {
       return next('no_image')
     }
     let imageInfo
-    ExifImage({ image : req.file.buffer }, (err, obj) => {
+    new ExifImage({ image : req.file.buffer }, (err, obj) => {
       if (err) {
         throw err
       }
@@ -40,9 +40,8 @@ export async function addPhoto (req, res, next) {
     })
     let info = await uploadImage(req.file.buffer)
     let photo = {
-      links: `//${info.url}`,
-      exif: imageInfo.exif,
-      image: imageInfo.image
+      image: info,
+      exif: imageInfo
     }
     req.photoInfo = photo
     next()
