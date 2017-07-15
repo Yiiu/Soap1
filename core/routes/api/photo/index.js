@@ -22,13 +22,12 @@ router
       if (!photoInfo) {
         throw new Error('error_download')
       }
-      console.log(photoInfo)
-      // let photo = await new Photo({ ...photoInfo, user: user._id}).save()
-      // await User.update({
-      //   _id: user._id
-      // }, {
-      //   $inc: { photos: 1 }
-      // })
+      let photo = await new Photo({ ...photoInfo, user: user._id}).save()
+      await User.update({
+        _id: user._id
+      }, {
+        $inc: { photos: 1 }
+      })
       res.json(photo)
     } catch (error) {
       next(error)

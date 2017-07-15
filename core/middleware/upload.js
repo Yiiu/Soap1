@@ -2,12 +2,24 @@ import uid from 'uid-safe'
 import qn from 'qn'
 import config from 'config'
 import multer from 'multer'
-import exif from 'exif'
 import pify from'pify'
+import exif from 'core/util/exif'
+import piexif from 'piexifjs'
+import ofType from 'image-type'
+import ofSize from 'image-size'
 
-const ExifImage = exif.ExifImage
+let ExifImage = pify(exif.ExifImage)
 
 const storage = multer.memoryStorage()
+
+async function getExif (buffer) {
+  try {
+    let exif = await ExifImage({ image: buffer })
+    return exif
+  } catch (error) {
+    return null
+  }
+}
 
 const upload = pify(
   multer({
@@ -31,19 +43,33 @@ export async function addPhoto (req, res, next) {
     if (!req.file || !req.file.buffer) {
       return next('no_image')
     }
-    let imageInfo
-    new ExifImage({ image : req.file.buffer }, (err, obj) => {
-      if (err) {
-        throw err
-      }
-      imageInfo = obj
-    })
-    let info = await uploadImage(req.file.buffer)
-    let photo = {
-      image: info,
-      exif: imageInfo
+    let type = ofType(req.file.buffer)
+    let size = ofSize(req.file.buffer)
+    let { url } = await uploadImage(req.file.buffer)
+    let images = {
+      mimetype: type.mime,
+      width: size.width,
+      height: size.height,
+      links: `//${url}`
     }
-    req.photoInfo = photo
+    let exifInfo = await getExif(req.file.buffer)
+    if (exifInfo){
+      let { exif, image, gps} = exifInfo
+      images.exif = {
+        aperture: exif.FNumber && exif.FNumber[0] / exif.FNumber[1],
+        exposure_time: exif.ExposureTime && `${exif.ExposureTime[0]/10}/${exif.ExposureTime[1]/10}`,
+        iso: exif.ISO,
+        create_date: exif.CreateDate,
+        make: image.Make,
+        model: image.Model,
+        exposure_program: exif.ExposureProgram,
+        focal_length: exif.FocalLength && exif.FocalLength[0] / exif.FocalLength[1],
+        exposure_mode: exif.ExposureMode,
+        white_balance: exif.WhiteBalance
+      },
+      images.gps = gps
+    }
+    req.photoInfo = images
     next()
   } catch (err) {
     next(err)

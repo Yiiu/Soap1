@@ -14,7 +14,7 @@ let photoSchema = new Schema({
   exif: {
     type: Object
   },
-  image: {
+  gps: {
     type: Object
   },
   width: {
