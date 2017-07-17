@@ -9,6 +9,7 @@ router
     next()
   }, signup)
   .post('/token', (req, res, next) => {
+    req.session.userId = 'test'
     inspector('token', req.body)
     next()
   }, token)
