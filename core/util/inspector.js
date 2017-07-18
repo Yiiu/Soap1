@@ -3,7 +3,6 @@ import inspector from 'schema-inspector'
 
 export default function validator (schema) {
   return function validate (type, data) {
-    console.log(data instanceof Object)
     let schemaData = schema[type]
     let { sanitization, validation } = schemaData
     inspector.sanitize(sanitization, data)

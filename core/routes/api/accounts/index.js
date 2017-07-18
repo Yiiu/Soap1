@@ -1,6 +1,6 @@
 import express from 'express'
 import inspector from './schema'
-import { signup, token } from 'core/controllers/accounts'
+import { signup, signin } from 'core/controllers/accounts'
 const router = express.Router()
 
 router
@@ -8,10 +8,9 @@ router
     inspector('signup', req.body)
     next()
   }, signup)
-  .post('/token', (req, res, next) => {
-    req.session.userId = 'test'
-    inspector('token', req.body)
+  .post('/signin', (req, res, next) => {
+    inspector('signin', req.body)
     next()
-  }, token)
+  }, signin)
 
 export default router

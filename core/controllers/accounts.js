@@ -17,12 +17,12 @@ export let signup = async (req, res, next) => {
   }
 }
 
-export let token = async (req, res, next) => {
+export let signin = async (req, res, next) => {
   try {
     const { userOrEmail, password } = req.body
-    let token = await User.login(userOrEmail, password)
+    await User.signin(userOrEmail, password, req)
     res.status(200).json({
-      token: token
+      message: 'ok'
     })
   } catch (error) {
     next(error)

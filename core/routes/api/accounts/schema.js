@@ -20,7 +20,7 @@ const schema = {
       }
     }
   },
-  token: {
+  signin: {
     sanitization: {
       type: 'object',
       strict: true,

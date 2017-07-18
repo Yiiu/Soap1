@@ -30,26 +30,27 @@ export default function (schema) {
     await user.save()
     return true
   }
-  schema.statics.login = async function (username, pwd) {
+  schema.statics.signin = async function (username, pwd, req) {
     let userInfo
     if (isEmail(username)) {
       userInfo = await this.findOne({ email: username })
     } else {
       userInfo = await this.findOne({ username: username })
     }
-    if (!userInfo) throw new Error('exist_userOrEmail')
+    if (!userInfo) throw 'exist_userOrEmail'
     let salt = userInfo.salt
     let hash = await crypto.pbkdf2Sync(pwd, salt, 23333, 32, 'sha512').toString('hex')
-    if (hash !== userInfo.hash) throw new Error('exist_password')
+    if (hash !== userInfo.hash) throw 'exist_password'
 
-    let token = jwt.sign({
-      id: userInfo._id
-    }, config.secret, {
-      expiresIn: '7d'
-    })
+    // let token = jwt.sign({
+    //   id: userInfo._id
+    // }, config.secret, {
+    //   expiresIn: '7d'
+    // })
     userInfo.login_at = Date.now()
     userInfo.save()
-    return token
+    req.session.userId = userInfo._id
+    return
   }
   schema.statics.fetch = async function (id) {
     let info = await User.findById(id)

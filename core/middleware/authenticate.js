@@ -13,17 +13,16 @@ export async function isAuthenticated (req, res, next) {
 
 export async function isUserLogger (req, res, next) {
   try {
-    const { authorization } = req.headers
-    if (!authorization) throw 'unauthorized'
-    let id = await jwt.verify(authorization, config.secret).id
-    let user = await User.findById(id)
+    const { userId } = req.session
+    if (!userId) throw 'unauthorized'
+    let user = await User.findById(userId)
     if (!user) {
-      next(new Error('unauthorized'))
+      next('unauthorized')
     } else {
       req.user = user
       next()
     }
   } catch (err) {
-    next(new Error('unauthorized'))
+    next(err)
   }
 }

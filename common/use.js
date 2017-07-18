@@ -18,8 +18,7 @@ export default (app) => {
       maxAge: 400000000
     },
     resave: false,
-    rolling: true,
-    saveUninitialized: true,
+    saveUninitialized: false,
   }))
   app.use(bodyParser.json())
   app.use(bodyParser.urlencoded({ extended: false }))
