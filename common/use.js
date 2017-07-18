@@ -25,4 +25,10 @@ export default (app) => {
   app.use(bodyParser.urlencoded({ extended: false }))
   app.use(morgan('dev'))
   app.use(cute())
+  app.use(function (req, res, next) {
+    if (req.headers['content-type'] === 'application/x-www-form-urlencoded') {
+      req.body = Object.assign({}, req.body)
+    }
+    next()
+  })
 }

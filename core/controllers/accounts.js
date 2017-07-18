@@ -9,10 +9,6 @@ import { User } from 'core/models'
 export let signup = async (req, res, next) => {
   try {
     const { username, email, password } = req.body
-    let userByName  = await User.findOne({ username: username })
-    let userByEmail  = await User.findOne({ email: email })
-    if (userByName) throw new Error('exist_username')
-    if (userByEmail) throw new Error('exist_email')
     let user = await new User({ username: username, email: email })
     await User.signup(user, password)
     res.status(200).json({})

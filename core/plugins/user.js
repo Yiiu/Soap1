@@ -10,8 +10,10 @@ export default function (schema) {
     if (!(user in this)) {
       user = new this(user)
     }
-    let userInfo = await this.findByUsername(user.username)
-    if (userInfo) throw new Error('exist_username')
+    let userByName  = await this.findOne({ username: user.username })
+    let userByEmail  = await this.findOne({ email: user.email })
+    if (userByName) throw new Error('exist_username')
+    if (userByEmail) throw new Error('exist_email')
     return await user.setPassword(user, pwd)
   }
   // 模型的用户名查找方法
