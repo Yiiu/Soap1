@@ -50,7 +50,10 @@ export default function (schema) {
     userInfo.login_at = Date.now()
     userInfo.save()
     req.session.userId = userInfo._id
-    return
+
+    return await User
+      .findById(userInfo._id)
+      .select(userSelect)
   }
   schema.statics.fetch = async function (id) {
     let info = await User.findById(id)

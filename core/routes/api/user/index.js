@@ -6,7 +6,7 @@ import { User } from 'core/models'
 router
   .use(isUserLogger)
   .get('users')
-  .get('/users/:id', isQuery, async (req, res, next) => {
+  .get('/user/:id', isQuery, async (req, res, next) => {
     try {
       const { id } = req.params
       let userInfo
@@ -21,7 +21,7 @@ router
       next(error)
     }
   })
-  .get('/users/:id/photos', isQuery, async (req, res, next) => {
+  .get('/user/:id/photos', isQuery, async (req, res, next) => {
     try {
       const { id } = req.params
       let userInfo

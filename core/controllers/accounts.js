@@ -20,9 +20,10 @@ export let signup = async (req, res, next) => {
 export let signin = async (req, res, next) => {
   try {
     const { userOrEmail, password } = req.body
-    await User.signin(userOrEmail, password, req)
+    let userInfo = await User.signin(userOrEmail, password, req)
     res.status(200).json({
-      message: 'ok'
+      message: 'ok',
+      data: userInfo
     })
   } catch (error) {
     next(error)
@@ -30,7 +31,7 @@ export let signin = async (req, res, next) => {
 }
 
 export let logout = async (req, res) => {
-  req.logout()
+  req.session.destroy()
   res.json({
     message: '退出成功'
   })

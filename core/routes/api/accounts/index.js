@@ -1,6 +1,6 @@
 import express from 'express'
 import inspector from './schema'
-import { signup, signin } from 'core/controllers/accounts'
+import { signup, signin, logout } from 'core/controllers/accounts'
 const router = express.Router()
 
 router
@@ -12,5 +12,6 @@ router
     inspector('signin', req.body)
     next()
   }, signin)
+  .post('/logout', logout)
 
 export default router
