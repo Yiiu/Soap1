@@ -1,9 +1,8 @@
-import jwt from 'jsonwebtoken'
 import { User, Photo } from 'core/models'
 import crypto from 'crypto'
-import { filterObj } from 'core/util'
 import { isEmail } from 'validator'
-import config from 'config'
+import { ApiError } from 'core/util'
+
 let userSelect = 'nickname username description avatar followers following website location photos'
 export default function (schema) {
   schema.statics.signup = async function (user, pwd) {
@@ -12,8 +11,8 @@ export default function (schema) {
     }
     let userByName  = await this.findOne({ username: user.username })
     let userByEmail  = await this.findOne({ email: user.email })
-    if (userByName) throw new Error('exist_username')
-    if (userByEmail) throw new Error('exist_email')
+    if (userByName) throw new ApiError(401, 'exist_username')
+    if (userByEmail) throw new ApiError(401, 'exist_email')
     return await user.setPassword(user, pwd)
   }
   // 模型的用户名查找方法
@@ -37,7 +36,7 @@ export default function (schema) {
     } else {
       userInfo = await this.findOne({ username: username })
     }
-    if (!userInfo) throw 'exist_userOrEmail'
+    if (!userInfo) throw new ApiError(401, 'exist_userOrEmail')
     let salt = userInfo.salt
     let hash = await crypto.pbkdf2Sync(pwd, salt, 23333, 32, 'sha512').toString('hex')
     if (hash !== userInfo.hash) throw 'exist_password'
@@ -55,11 +54,6 @@ export default function (schema) {
       .findById(userInfo._id)
       .select(userSelect)
   }
-  schema.statics.fetch = async function (id) {
-    let info = await User.findById(id)
-    return filterObj(info, userArr)
-  }
-
   schema.statics.getUserInfo = async function (id) {
     let info = await User
       .findById(id)

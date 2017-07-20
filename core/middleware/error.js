@@ -1,23 +1,18 @@
-let known_errors = {
-  200: 'OK',
-  400: 'bad_request',
-  401: 'unauthorized',
-  403: 'forbidden',
-  404: 'not_found',
-  500: 'internel_server_error',
-  503: 'service_unavailable',
-}
+import { ApiError, ValidationError } from 'core/util'
+
 export function handleError (error, req, res, next) {
-  let status = 400
-  if (error instanceof Error) {
-    Object.keys(known_errors).forEach(type => {
-      if (known_errors[type] === error.message) {
-        status = type
-      }
-    })
-    res.status(status).json({
+  if (error instanceof ValidationError) {
+    res.status(400).json(error)
+  } else if (error instanceof ApiError) {
+    let err = {
+      message: error.message
+    }
+    if (err.error) err.error = err.error
+    res.status(error.status).json(err)
+  } else if (error instanceof Error) {
+    res.status(400).json({
       message: error.message,
-      stack: error.stack.split('\n')
+      error: error.stack.split('\n')
     })
   } else {
     res.status(400).json({

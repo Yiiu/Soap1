@@ -1,11 +1,12 @@
 import express from 'express'
 import { Photo, User } from 'core/models'
-import { isUserLogger, addPhoto } from 'core/middleware'
+import { isAuthenticated, addPhoto } from 'core/middleware'
+import { ApiError } from 'core/util'
 
 const router = express.Router()
 
 router
-  .use(isUserLogger)
+  .use(isAuthenticated)
   .get('/photos', async (req, res, next) => {
     try {
       let { type } = req.query
@@ -20,7 +21,7 @@ router
     try {
       const { user, photoInfo} = req
       if (!photoInfo) {
-        throw new Error('error_download')
+        throw new ApiError(400, 'error_download')
       }
       let photo = await new Photo({ ...photoInfo, user: user._id}).save()
       await User.update({

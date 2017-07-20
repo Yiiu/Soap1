@@ -17,7 +17,13 @@ export default function validator (schema) {
           code: error.code
         }
       })
-      throw err
+      throw new ValidationError(err)
     }
+  }
+}
+export class ValidationError {
+  constructor(error) {
+    this.message = 'validation_error'
+    this.error = error
   }
 }
