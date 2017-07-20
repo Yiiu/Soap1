@@ -4,7 +4,6 @@ import config from 'config'
 import multer from 'multer'
 import pify from'pify'
 import exif from 'core/util/exif'
-import piexif from 'piexifjs'
 import ofType from 'image-type'
 import ofSize from 'image-size'
 
