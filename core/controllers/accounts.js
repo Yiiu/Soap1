@@ -21,10 +21,7 @@ export let signin = async (req, res, next) => {
   try {
     const { userOrEmail, password } = req.body
     let userInfo = await User.signin(userOrEmail, password, req)
-    res.status(200).json({
-      message: 'ok',
-      data: userInfo
-    })
+    res.status(200).json(userInfo)
   } catch (error) {
     next(error)
   }

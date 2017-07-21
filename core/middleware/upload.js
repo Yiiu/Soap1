@@ -24,6 +24,7 @@ const upload = pify(
   multer({
     storage: storage,
     fileFilter: function(req, files, callback) {
+      console.log(1)
       var type = '|' + files.mimetype.slice(files.mimetype.lastIndexOf('/') + 1) + '|'
       var fileTypeValid = '|jpg|png|jpeg|gif|'.indexOf(type) !== -1
       if (fileTypeValid) {

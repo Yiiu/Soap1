@@ -1,8 +1,8 @@
-import { User, Photo } from 'core/models'
+import { Photo } from 'core/models'
 
 let userSelect = 'nickname username description avatar followers following website location photos'
 export default function (schema) {
-  schema.statics.getNewPhotos = async function (id) {
+  schema.statics.getNewPhotos = async function () {
     let info = await Photo
       .find()
       .sort('_id')
