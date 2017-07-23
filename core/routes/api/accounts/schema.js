@@ -1,6 +1,4 @@
-import inspector from 'core/util/inspector'
-
-const schema = {
+export default {
   signup: {
     sanitization: {
       type: 'object',
@@ -38,5 +36,3 @@ const schema = {
     }
   }
 }
-
-export default inspector(schema)

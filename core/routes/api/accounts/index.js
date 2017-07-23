@@ -1,17 +1,12 @@
 import express from 'express'
-import inspector from './schema'
-import { signup, signin, logout } from 'core/controllers/accounts'
+import inspectorObject from './schema'
+import { inspector } from 'core/middleware'
+import { signup, signin, logout } from 'core/controllers'
 const router = express.Router()
 
 router
-  .post('/signup', (req, res, next) => {
-    inspector('signup', req.body)
-    next()
-  }, signup)
-  .post('/signin', (req, res, next) => {
-    inspector('signin', req.body)
-    next()
-  }, signin)
+  .post('/signup', inspector(inspectorObject.signup), signup)
+  .post('/signin', inspector(inspectorObject.signin), signin)
   .post('/logout', logout)
 
 export default router

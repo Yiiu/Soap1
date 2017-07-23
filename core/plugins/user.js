@@ -2,6 +2,7 @@ import { User, Photo } from 'core/models'
 import crypto from 'crypto'
 import { isEmail } from 'validator'
 import { ApiError } from 'core/util'
+import config from 'config'
 
 let userSelect = 'nickname username description avatar followers following website location photos'
 export default function (schema) {
@@ -11,14 +12,9 @@ export default function (schema) {
     }
     let userByName  = await this.findOne({ username: user.username })
     let userByEmail  = await this.findOne({ email: user.email })
-    if (userByName) throw new ApiError(401, 'exist_username')
-    if (userByEmail) throw new ApiError(401, 'exist_email')
+    if (userByName) throw new ApiError(400, 'exist_username')
+    if (userByEmail) throw new ApiError(400, 'exist_email')
     return await user.setPassword(user, pwd)
-  }
-  // 模型的用户名查找方法
-  schema.statics.findByUsername = async function (userName) {
-    let userInfo = await this.findOne({ username: userName })
-    return userInfo
   }
   schema.methods.setPassword = async function (user, pwd) {
     // 生成随机数
@@ -36,7 +32,7 @@ export default function (schema) {
     } else {
       userInfo = await this.findOne({ username: username })
     }
-    if (!userInfo) throw new ApiError(401, 'exist_userOrEmail')
+    if (!userInfo) throw new ApiError(400, 'exist_userOrEmail')
     let salt = userInfo.salt
     let hash = await crypto.pbkdf2Sync(pwd, salt, 23333, 32, 'sha512').toString('hex')
     if (hash !== userInfo.hash) throw 'exist_password'
@@ -58,9 +54,16 @@ export default function (schema) {
     let info = await User
       .findById(id)
       .select(userSelect)
+    if (!info.avatar) info.avatar = config.default_avatar
     return info
   }
-
+  schema.statics.getUserNameInfo = async function (username) {
+    let info = await User
+      .findOne({ username: username })
+      .select(userSelect)
+    if (!info.avatar) info.avatar = config.default_avatar
+    return info
+  }
   schema.statics.getUserPhotos = async function (id) {
     let info = await Photo
       .find({ user: id })

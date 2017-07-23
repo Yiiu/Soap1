@@ -2,34 +2,41 @@
  * Created by yuer on 2017/5/18.
  */
 import { User } from 'core/models'
-import { ApiError } from 'core/util'
 
-export const getOneUser = async function (req, res, next) {
+export const getOneUserInfo = async function (req, res, next) {
   try {
-    let id = req.params.id
-    let data = await User.findOneId(id)
-      .select('-salt -hash')
-      .lean()
-    if (!data) {
-      new ApiError(400, 'no_user')
+    const { id } = req.params
+    let userInfo
+    if (!id) {
+      const username = req.params[0]
+      if (!username) throw 'fucking username??'
+      userInfo = await User.getUserNameInfo(username)
+    } else {
+      if (id === 'me') {
+        const { userId } = req.session
+        userInfo = await User.getUserInfo(userId)
+      } else {
+        userInfo = await User.getUserInfo(id)
+      }
     }
-    return res.json({
-      message: 'test',
-      data: data
-    })
+    res.json(userInfo)
   } catch (error) {
     next(error)
   }
 }
-export const tokenUser = async function (req, res) {
-  let token = req.headers.authorization
-  let userInfo
+
+export const getOneUserPhoto = async function (req, res, next) {
   try {
-    userInfo = await User.getUserInfo(token)
-  } catch (e) {
-    console.log(e)
+    const { id } = req.params
+    let userInfo
+    if (id === 'me') {
+      const { userId } = req.session
+      userInfo = await User.getUserPhotos(userId)
+    } else {
+      userInfo = await User.getUserPhotos(id)
+    }
+    res.json(userInfo)
+  } catch (error) {
+    next(error)
   }
-  return res.json({
-    data: userInfo
-  })
 }

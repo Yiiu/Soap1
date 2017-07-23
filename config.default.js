@@ -19,7 +19,8 @@ const config = {
     secretKey: '123123',
     bucket: '1',
     origin: 'up.qiniu.com'
-  }
+  },
+  default_avatar: '//cdn.wanan.me/u=3758858261,827265384&fm=28&gp=0.jpg'
 }
 export const mongo = config.mongodb
 export default config
