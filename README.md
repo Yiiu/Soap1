@@ -5,7 +5,7 @@
 - Django
 
 
-## 安装 Django 模块
+## Django 功能模块迁移
 
 ```bash
 python manage.py migrate
