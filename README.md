@@ -16,3 +16,9 @@ python manage.py migrate
 ```bash
 python manage.py runserver 0.0.0.0:8000
 ```
+
+## 添加管理员账号
+
+```bash
+python manage.py createsuperuser
+```
