@@ -28,6 +28,11 @@ python manage.py createsuperuser
 pip freeze > ./requirements.txt
 ```
 
+## 根据文件安装依赖
+```bash
+pip install -r requirements.txt
+```
+
 ## 生成应用
 ```bash
 python manage.py startapp APP_NAME
