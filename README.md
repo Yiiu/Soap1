@@ -22,3 +22,21 @@ python manage.py runserver 0.0.0.0:8000
 ```bash
 python manage.py createsuperuser
 ```
+
+## 生成依赖文件
+```bash
+pip freeze > ./requirements.txt
+```
+
+## 生成应用
+```bash
+python manage.py startapp APP_NAME
+```
+
+setting.py
+```py
+INSTALLED_APPS = [
+    //...
+    APP_NAME
+]
+```
