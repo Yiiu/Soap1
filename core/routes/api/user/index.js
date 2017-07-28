@@ -1,18 +1,19 @@
 import express from 'express'
 import { isAuthenticated } from 'core/middleware'
-import { getOneUserInfo, getOneUserPhoto } from 'core/controllers'
+import { getOneUserInfo, getOneUserPhoto, getUserLikePhoto } from 'core/controllers'
 const router = express.Router()
 router
   .use(isAuthenticated)
   .get('users')
   .get(/\/user\/@(\w+)/, getOneUserInfo)
   .get('/user/:id', isQuery, getOneUserInfo)
-  .get('/user/:id/photos', isQuery, getOneUserPhoto)
+  .get('/user/:userId/photos', isQuery, getOneUserPhoto)
+  .get('/user/:userId/likes', isQuery, getUserLikePhoto)
 export default router
 
 function isQuery (req, res, next) {
-  const { id } = req.params
-  if (!id) {
+  const { userId } = req.params
+  if (!userId) {
     next('exist_username')
   } else {
     next()

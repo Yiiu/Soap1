@@ -1,12 +1,19 @@
-import { Photo } from 'core/models'
+import { Photo, User } from 'core/models'
 
-let userSelect = 'nickname username description avatar followers following website location photos'
 export default function (schema) {
-  schema.statics.getNewPhotos = async function () {
-    let info = await Photo
-      .find()
-      .sort('_id')
-      .populate({ path: 'user', select: userSelect })
+  schema.statics.getPhotos = async function (id) {
+    let info
+    if (id) {
+      info = await Photo
+        .find({ user: id })
+        .sort('created_at')
+        .populate({ path: 'user', select: User.select })
+    } else {
+      info = await Photo
+        .find()
+        .sort('_id')
+        .populate({ path: 'user', select: User.select })
+    }
     return info
   }
 }
