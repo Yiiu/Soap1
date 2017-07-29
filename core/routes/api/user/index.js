@@ -6,7 +6,7 @@ router
   .use(isAuthenticated)
   .get('users')
   .get(/\/user\/@(\w+)/, getOneUserInfo)
-  .get('/user/:id', isQuery, getOneUserInfo)
+  .get('/user/:userId', isQuery, getOneUserInfo)
   .get('/user/:userId/photos', isQuery, getOneUserPhoto)
   .get('/user/:userId/likes', isQuery, getUserLikePhoto)
 export default router
