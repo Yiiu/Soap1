@@ -1,4 +1,5 @@
 import mongoose from './mongoose'
+import Plugins from 'core/plugins/photo'
 
 let Schema = mongoose.Schema
 
@@ -36,7 +37,13 @@ let photoSchema = new Schema({
     type: Date,
     default: Date.now
   }
+}, {
+  toJson: {
+    virtuals: true
+  }
 })
+
+photoSchema.plugin(Plugins)
 
 let photo = mongoose.model('photo', photoSchema)
 export default photo

@@ -1,11 +1,12 @@
-import { User, Photo } from 'core/models'
+import { User, Photo, Like } from 'core/models'
 import crypto from 'crypto'
 import { isEmail } from 'validator'
 import { ApiError } from 'core/util'
 import config from 'config'
 
-let userSelect = 'nickname username description avatar followers following website location photos'
+let userSelect = 'nickname username description avatar followers following website location photos like'
 export default function (schema) {
+  schema.statics.select = 'nickname username description avatar followers following website location photos'
   schema.statics.signup = async function (user, pwd) {
     if (!(user in this)) {
       user = new this(user)
@@ -22,6 +23,7 @@ export default function (schema) {
     let hash = await crypto.pbkdf2Sync(pwd, salt, 23333, 32, 'sha512').toString('hex')
     user.salt = salt
     user.hash = hash
+    user.likeSchema = await Like.create({ user: user._id, photo: [] })
     await user.save()
     return true
   }

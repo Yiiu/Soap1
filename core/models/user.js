@@ -1,5 +1,5 @@
 import mongoose from './mongoose'
-import Plugins from '../plugins/user'
+import Plugins from 'core/plugins/user'
 
 let Schema = mongoose.Schema
 
@@ -43,6 +43,14 @@ let userSchema = new Schema({
     type: String,
     default: null
   },
+  like: {
+    type: Number,
+    default: 0
+  },
+  likeSchema: {
+    type: ObjectId,
+    ref: 'like'
+  },
   followers: {
     type: Number,
     default: 0
@@ -70,6 +78,10 @@ let userSchema = new Schema({
   photos: {
     type: Number,
     default: 0
+  }
+}, {
+  toJson: {
+    virtuals: true
   }
 })
 
