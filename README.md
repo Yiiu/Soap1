@@ -16,3 +16,32 @@ python manage.py migrate
 ```bash
 python manage.py runserver 0.0.0.0:8000
 ```
+
+## 添加管理员账号
+
+```bash
+python manage.py createsuperuser
+```
+
+## 生成依赖文件
+```bash
+pip freeze > ./requirements.txt
+```
+
+## 根据文件安装依赖
+```bash
+pip install -r requirements.txt
+```
+
+## 生成应用
+```bash
+python manage.py startapp APP_NAME
+```
+
+setting.py
+```py
+INSTALLED_APPS = [
+    //...
+    APP_NAME
+]
+```
