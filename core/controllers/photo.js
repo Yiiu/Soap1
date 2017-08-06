@@ -5,7 +5,7 @@ export const getPhotoList = async (req, res, next) => {
   try {
     let { type } = req.query
     if (!type) type = 'new'
-    let data = await Photo.getPhotos()
+    let data = await Photo.getPhotoList(null, req.user._id)
     res.json(data)
   } catch (error) {
     next(error)
@@ -33,25 +33,36 @@ export const addPhoto = async (req, res, next) => {
 export const likePhoto = async (req, res, next) => {
   try {
     const { params, user } = req
-    if (params.photoId) {
-      Promise.all([
-        await Like.update({
-          user: user._id
-        }, {
-          $push: { photos: params.photoId }
-        }),
-        await User.update({
-          _id: user._id
-        }, {
-          $inc: { like: 1 }
-        })
-      ])
-      return res.json({
-        message: 'ok'
+    Promise.all([
+      await Like.update({
+        user: user._id
+      }, {
+        $push: { photos: params.photoId }
+      }),
+      await User.update({
+        _id: user._id
+      }, {
+        $inc: { like: 1 }
+      }),
+      await Photo.update({
+        like: params.photoId
+      }, {
+        $inc: { like: 1 }
       })
-    } else {
-      throw 'no_userId'
-    }
+    ])
+    return res.json({
+      message: 'ok'
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
+export const getPhotoInfo = async (req, res, next) => {
+  try {
+    let { photoId } = req.params
+    let data = await Photo.getPhotoInfo(photoId)
+    res.json(data)
   } catch (error) {
     next(error)
   }
