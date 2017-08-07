@@ -33,26 +33,31 @@ export const addPhoto = async (req, res, next) => {
 export const likePhoto = async (req, res, next) => {
   try {
     const { params, user } = req
-    Promise.all([
-      await Like.update({
-        user: user._id
-      }, {
-        $push: { photos: params.photoId }
-      }),
-      await User.update({
-        _id: user._id
-      }, {
-        $inc: { like: 1 }
-      }),
-      await Photo.update({
-        like: params.photoId
-      }, {
-        $inc: { like: 1 }
+    let isLike = await Photo.getUserIsLike(params.photoId, user._id)
+    if (!isLike) {
+      Promise.all([
+        await Like.update({
+          user: user._id
+        }, {
+          $addToSet: { photos: params.photoId }
+        }),
+        await User.update({
+          _id: user._id
+        }, {
+          $inc: { like: 1 }
+        }),
+        await Photo.update({
+          _id: params.photoId
+        }, {
+          $inc: { like: 1 }
+        })
+      ])
+      return res.json({
+        message: 'ok'
       })
-    ])
-    return res.json({
-      message: 'ok'
-    })
+    } else {
+      throw new ApiError(400, 'already_like')
+    }
   } catch (error) {
     next(error)
   }

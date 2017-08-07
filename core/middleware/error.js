@@ -5,7 +5,7 @@ export function handleError (error, req, res, next) {
     res.status(400).json(error)
   } else if (error instanceof ApiError) {
     let err = {
-      message: error.message
+      message: error.message ? error.message : error.error
     }
     if (err.error) err.error = err.error
     res.status(error.status).json(err)
@@ -19,5 +19,6 @@ export function handleError (error, req, res, next) {
       error: error
     })
   }
+  console.error(error)
   next()
 }
