@@ -17,7 +17,8 @@ export default function (schema) {
         .lean()
     }
     for (let i in info) {
-      let isLike = await Like.getUserIsLike(info[i]._id, id)
+      let isLike = await Photo.getUserIsLike(info[i]._id, id)
+      info[i].is_like = isLike
     }
     return info
   }
