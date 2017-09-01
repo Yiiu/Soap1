@@ -4,6 +4,7 @@ import 'common/logger'
 import express from 'express'
 import config from 'config'
 import soap from 'core'
+import { models } from 'core/models'
 import { handleError } from 'core/middleware'
 
 console.log('------------------------------------')
@@ -17,7 +18,7 @@ import use from './common/use'
 const app = new express()
 
 use(app)
-
+app.use(models)
 app.use(routes)
 app.use(handleError)
 

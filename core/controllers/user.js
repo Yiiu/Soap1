@@ -1,10 +1,10 @@
 /**
  * Created by yuer on 2017/5/18.
  */
-import { User, Photo, Like } from 'core/models'
 
 export const getOneUserInfo = async function (req, res, next) {
   try {
+    const { User, Photo, Like } = req.models
     const { userId: id } = req.params
     let userInfo
     if (!id) {
@@ -27,6 +27,7 @@ export const getOneUserInfo = async function (req, res, next) {
 
 export const getOneUserPhoto = async function (req, res, next) {
   try {
+    const { Photo } = req.models
     const { userId: id } = req.params
     let userInfo
     if (id === 'me') {
@@ -44,6 +45,7 @@ export const getOneUserPhoto = async function (req, res, next) {
 
 export const getUserLikePhoto = async (req, res, next) => {
   try {
+    const { Like } = req.models
     const { params } = req
     let like = await Like.getPhotos(params.userId)
     return res.json(like)

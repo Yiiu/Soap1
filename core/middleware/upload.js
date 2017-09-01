@@ -6,10 +6,18 @@ import pify from'pify'
 import exif from 'core/util/exif'
 import ofType from 'image-type'
 import ofSize from 'image-size'
+import fs from 'fs'
+import path from 'path'
 
 let ExifImage = pify(exif.ExifImage)
-
-const storage = multer.memoryStorage()
+let storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, path.resolve(__dirname, `../../uploads`))
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname + '-' + Date.now())
+  }
+})
 
 async function getExif (buffer) {
   try {
@@ -20,55 +28,56 @@ async function getExif (buffer) {
   }
 }
 
-const upload = pify(
-  multer({
-    storage: storage,
-    fileFilter: function(req, files, callback) {
-      var type = '|' + files.mimetype.slice(files.mimetype.lastIndexOf('/') + 1) + '|'
-      var fileTypeValid = '|jpg|png|jpeg|gif|'.indexOf(type) !== -1
-      if (fileTypeValid) {
-        callback(null, true)
-      } else {
-        callback(new Error('invalid_imagetype'))
-      }
-      callback(null, !!fileTypeValid)
+export const multerUpload = multer({
+  storage: storage,
+  fileFilter: function(req, files, callback) {
+    console.log(files)
+    var type = '|' + files.mimetype.slice(files.mimetype.lastIndexOf('/') + 1) + '|'
+    var fileTypeValid = '|jpg|png|jpeg|'.indexOf(type) !== -1
+    if (fileTypeValid) {
+      callback(null, true)
+    } else {
+      callback(new Error('invalid_imagetype'))
     }
-  }).single('image')
-)
+    callback(null, !!fileTypeValid)
+  }
+})
 
 export async function uploadPhoto (req, res, next) {
   try {
-    await upload(req, res)
-    if (!req.file || !req.file.buffer) {
-      return next('no_image')
-    }
-    let type = ofType(req.file.buffer)
-    let size = ofSize(req.file.buffer)
-    let { url } = await uploadImage(req.file.buffer)
-    let images = {
-      mimetype: type.mime,
-      width: size.width,
-      height: size.height,
-      links: `//${url}`
-    }
-    let exifInfo = await getExif(req.file.buffer)
-    if (exifInfo){
-      let { exif, image, gps} = exifInfo
-      images.exif = {
-        aperture: exif.FNumber && exif.FNumber[0] / exif.FNumber[1],
-        exposure_time: exif.ExposureTime && `${exif.ExposureTime[0]/10}/${exif.ExposureTime[1]/10}`,
-        iso: exif.ISO,
-        create_date: exif.CreateDate,
-        make: image.Make,
-        model: image.Model,
-        exposure_program: exif.ExposureProgram,
-        focal_length: exif.FocalLength && exif.FocalLength[0] / exif.FocalLength[1],
-        exposure_mode: exif.ExposureMode,
-        white_balance: exif.WhiteBalance
-      },
-      images.gps = gps
-    }
-    req.photoInfo = images
+    // const file = req.file
+    // if (!file) {
+    //   return next('no_image')
+    // }
+    // const filePath = path.resolve(__dirname, `../../${file.path}`)
+    // let data = await fs.createReadStream(filePath)
+    // const size = ofSize(filePath)
+    // const exifInfo = await getExif(filePath)
+    // let { url } = await uploadImage(data)
+    // let images = {
+    //   mimetype: size.type,
+    //   width: size.width,
+    //   height: size.height,
+    //   links: `//${url}`
+    // }
+    // if (exifInfo){
+    //   let { exif, image, gps} = exifInfo
+    //   images.exif = {
+    //     aperture: exif.FNumber && exif.FNumber[0] / exif.FNumber[1],
+    //     exposure_time: exif.ExposureTime && `${exif.ExposureTime[0]}/${exif.ExposureTime[1]}`,
+    //     iso: exif.ISO,
+    //     create_date: exif.CreateDate,
+    //     make: image.Make,
+    //     model: image.Model,
+    //     exposure_program: exif.ExposureProgram,
+    //     focal_length: exif.FocalLength && exif.FocalLength[0] / exif.FocalLength[1],
+    //     exposure_mode: exif.ExposureMode,
+    //     white_balance: exif.WhiteBalance
+    //   },
+    //   images.gps = gps
+    // }
+    // req.photoInfo = images
+    // fs.unlinkSync(filePath)
     next()
   } catch (err) {
     next(err)
