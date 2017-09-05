@@ -4,3 +4,5 @@
 export * from './object'
 export * from './error'
 export * from './inspector'
+export * from './exif.js'
+export * from './upload'

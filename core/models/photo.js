@@ -26,9 +26,15 @@ let photoSchema = new Schema({
     type: Number,
     default: 0
   },
+  size: {
+    type: Number
+  },
   like: {
     type: Number,
     default: 0
+  },
+  originalname: {
+    type: String
   },
   tags: [{
     type: Object

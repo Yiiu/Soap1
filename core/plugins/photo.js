@@ -1,23 +1,14 @@
 import { Photo, User, Like } from 'core/models'
 
 export default function (schema) {
-  schema.statics.getPhotoList = async function (userId, id) {
-    let info
-    if (userId) {
-      info = await Photo
-        .find({ user: userId })
-        .sort('created_at')
-        .populate({ path: 'user', select: User.select })
-        .lean()
-    } else {
-      info = await Photo
-        .find()
-        .sort('_id')
-        .populate({ path: 'user', select: User.select })
-        .lean()
-    }
+  schema.statics.getPhotoList = async function (userId, params = {}) {
+    let info = await Photo
+      .find({ ...params })
+      .sort('_id')
+      .populate({ path: 'user', select: User.select })
+      .lean()
     for (let i in info) {
-      let isLike = await Photo.getUserIsLike(info[i]._id, id)
+      let isLike = await Photo.getUserIsLike(info[i]._id, userId)
       info[i].is_like = isLike
     }
     return info
