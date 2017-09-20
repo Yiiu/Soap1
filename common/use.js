@@ -12,7 +12,7 @@ export default (app) => {
   app.use(session({
     secret: config.secret,
     store: new MongoStore({
-      url: `mongodb://${config.mongodb.username}:${config.mongodb.pwd}@${config.mongodb.host}:${config.mongodb.port}/${config.mongodb.db}`
+      url: config.mongodb.url
     }),
     cookie: {
       maxAge: 400000000

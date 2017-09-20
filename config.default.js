@@ -22,5 +22,12 @@ const config = {
   },
   default_avatar: '//cdn.wanan.me/u=3758858261,827265384&fm=28&gp=0.jpg'
 }
+
+if (config.mongodb.pwd) {
+  config.mongodb.url = `mongodb://${config.mongodb.username}:${config.mongodb.pwd}@${config.mongodb.host}:${config.mongodb.port}/${config.mongodb.db}`
+} else {
+  config.mongodb.url = `mongodb://${config.mongodb.host}/${config.mongodb.db}`
+}
+
 export const mongo = config.mongodb
 export default config
