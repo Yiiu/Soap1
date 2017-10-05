@@ -1,8 +1,6 @@
 import { ApiError } from 'core/util'
 import { getExif, uploadQnImage } from 'core/util'
 import fs from 'fs'
-import path from 'path'
-import exif from 'core/util/exif'
 import ofSize from 'image-size'
 
 export const getPhotoList = async (req, res, next) => {
@@ -27,7 +25,28 @@ export const addPhoto = async (req, res, next) => {
     const filePath = file.path
     let data = await fs.createReadStream(filePath)
     const size = ofSize(filePath)
-    const exifInfo = await getExif(filePath)
+    let exifInfo = {}
+    try {
+      let info = await getExif(filePath)
+      let { exif, image, gps} = info
+      exifInfo = {
+        exif: {
+          make: image.Make,
+          model: image.Model,
+          aperture: exif.FNumber && exif.FNumber[0] / exif.FNumber[1],
+          exposure_time: exif.ExposureTime && `${exif.ExposureTime[0]}/${exif.ExposureTime[1]}`,
+          iso: exif.ISO,
+          create_date: exif.CreateDate,
+          exposure_program: exif.ExposureProgram,
+          focal_length: exif.FocalLength && exif.FocalLength[0] / exif.FocalLength[1],
+          exposure_mode: exif.ExposureMode,
+          white_balance: exif.WhiteBalance
+        },
+        gps: gps
+      }
+    } catch (err) {
+      exifInfo = {}
+    }
     let { url } = await uploadQnImage(data)
     let images = {
       mimetype: file.type,
@@ -37,23 +56,7 @@ export const addPhoto = async (req, res, next) => {
       size: file.sizem,
       originalname: file.originalname
     }
-    if (exifInfo){
-      let { exif, image, gps} = exifInfo
-      images.exif = {
-        aperture: exif.FNumber && exif.FNumber[0] / exif.FNumber[1],
-        exposure_time: exif.ExposureTime && `${exif.ExposureTime[0]}/${exif.ExposureTime[1]}`,
-        iso: exif.ISO,
-        create_date: exif.CreateDate,
-        make: image.Make,
-        model: image.Model,
-        exposure_program: exif.ExposureProgram,
-        focal_length: exif.FocalLength && exif.FocalLength[0] / exif.FocalLength[1],
-        exposure_mode: exif.ExposureMode,
-        white_balance: exif.WhiteBalance
-      },
-      images.gps = gps
-    }
-    let photo = await new Photo({ ...images, user: user._id}).save()
+    await new Photo({ ...exifInfo, ...images, user: user._id}).save()
     await User.update({
       _id: user._id
     }, {
@@ -71,34 +74,36 @@ export const likePhoto = async (req, res, next) => {
   try {
     const { params, user } = req
     const { User, Photo, Like } = req.models
-    const { action } = req.query
+    const { unlike } = req.query
     let isLike = await Photo.getUserIsLike(params.photoId, user._id)
-    if (!isLike) {
-      Promise.all([
-        await Like.update({
-          user: user._id
-        }, {
-          $addToSet: { photos: params.photoId }
-        }),
-        await User.update({
-          _id: user._id
-        }, {
-          $inc: { like: 1 }
-        }),
-        await Photo.update({
-          _id: params.photoId
-        }, {
-          $inc: { like: 1 }
-        })
-      ])
-      let photoInfo = await Photo
-        .findById(params.photoId)
-        .populate({ path: 'user', select: User.select })
-        .lean()
-      photoInfo.is_like = Photo.getUserIsLike(photoInfo._id, user._id)
-    } else {
-      throw new ApiError(400, 'already_like')
+    if (isLike && !unlike) {
+      throw 'err'
+    } else if (!isLike && unlike) {
+      throw 'err'
     }
+    Promise.all([
+      await Like.update({
+        user: user._id
+      }, {
+        [unlike ? '$unset' : '$addToSet']: { photos: params.photoId }
+      }),
+      await User.update({
+        _id: user._id
+      }, {
+        $inc: { like: unlike ? -1 : 1 }
+      }),
+      await Photo.update({
+        _id: params.photoId
+      }, {
+        $inc: { like: unlike ? -1 : 1 }
+      })
+    ])
+    let photoInfo = await Photo
+      .findById(params.photoId)
+      .populate({ path: 'user', select: User.select })
+      .lean()
+    photoInfo.is_like = await Photo.getUserIsLike(photoInfo._id, user._id)
+    return res.json(photoInfo)
   } catch (error) {
     next(error)
   }
