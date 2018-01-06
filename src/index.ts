@@ -1,23 +1,43 @@
 import * as express from 'express'
-import * as mongodb from 'mongodb'
+import * as oauthserver from 'oauth2-server'
+
+import connect from './modal'
+
+import config from './config'
 
 const app = express()
 
-const url = 'mongodb://soap:soap@localhost:27017/soap'
+export default async () => {
+  try {
+    console.log('------------------------------------')
+    console.log('  soap服务端启动中...')
 
-app.set('port', process.env.PORT || 3000)
+    app.set('port', config.port || 3000)
 
-app.get('/', (req, res) => {
-  return res.json({
-    data: 1
-  })
-})
+    await connect()
 
-mongodb.MongoClient.connect(url, () => {
-  console.log(123123)
-})
+    app.listen(config.port, () => {
+      console.log(`  biu~启动好啦，在${config.port}端口`)
+      console.log('  Press CTRL-C to stop')
+      console.log('------------------------------------')
+    })
 
-app.listen(app.get('port'), () => {
-  console.log(('  App is running at http://localhost:%d'), app.get('port'))
-  console.log('  Press CTRL-C to stop\n')
-})
+    // app.oauth = oauthserver({
+    //   model: {}, // See below for specification 
+    //   grants: ['password'],
+    //   debug: true
+    // });
+
+    app.all('/oauth/token', app.oauth.grant());
+
+    app.get('/', (req, res) => {
+      return res.json({
+        data: 1
+      })
+    })
+  } catch (err) {
+    console.error(err)
+    console.log('  启动失败...')
+    console.log('------------------------------------')
+  }
+}

@@ -8,7 +8,9 @@
         "quotemark": [true, "single", "jsx-double"],
         "no-console": [false, "log", "error"],
         "semicolon": [false, "always"],
-        "trailing-comma": [false, {"multiline": "always", "singleline": "never"}]
+        "trailing-comma": [false, {"multiline": "always", "singleline": "never"}],
+        "object-literal-sort-keys": [false],
+        "arrow-parens": [false]
     },
     "rulesDirectory": []
 }
