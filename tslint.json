@@ -10,7 +10,11 @@
         "semicolon": [false, "always"],
         "trailing-comma": [false, {"multiline": "always", "singleline": "never"}],
         "object-literal-sort-keys": [false],
-        "arrow-parens": [false]
+        "arrow-parens": [false],
+        "space-before-function-paren": [true],
+        "max-line-length": [false],
+        "ordered-imports": [false],
+        "no-bitwise": [false]
     },
     "rulesDirectory": []
 }
