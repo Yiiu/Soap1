@@ -14,7 +14,8 @@
         "space-before-function-paren": [true],
         "max-line-length": [false],
         "ordered-imports": [false],
-        "no-bitwise": [false]
+        "no-bitwise": [false],
+        "interface-name": [true, "never-prefix"]
     },
     "rulesDirectory": []
 }

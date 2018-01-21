@@ -4,8 +4,11 @@ import * as bodyParser from 'body-parser'
 import * as morgan from 'morgan'
 
 import oauth from './oauth'
-import connect from './modal'
+import connect from './model'
 import config from './config'
+
+const Request = oauthServer.Request;
+const Response = oauthServer.Response;
 
 const app = express()
 
@@ -30,6 +33,16 @@ export default async () => {
         return res.json(token)
       } catch (err) {
         return res.status(500).json(err)
+      }
+    });
+    app.post('/authorise', async (req, res) => {
+      const request = new Request(req);
+      const response = new Response(res);
+      try {
+        const data = await oauth.authorize(request, response)
+        return res.json(data)
+      } catch (err) {
+        return res.status(err.code || 500).json(err)
       }
     });
 
