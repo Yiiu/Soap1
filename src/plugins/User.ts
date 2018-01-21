@@ -1,7 +1,15 @@
 import {Schema} from 'mongoose'
 import * as crypto from 'crypto'
 
+import {
+  ApiError
+} from '../util'
+
 import { User } from '../model'
+
+export interface PluginsType {
+  signup: (user: object, pwd: string) => void
+}
 
 export default function (schema: Schema) {
   schema.statics.signup = async function (user, pwd) {

@@ -8,7 +8,6 @@ import {
   RefreshTokenModel,
   PasswordModel,
   ExtensionModel,
-  Token,
   Callback,
   Falsey,
   AuthorizationCode
@@ -16,6 +15,8 @@ import {
 
 import dbClient, { Client } from '../model/Client'
 import dbUser, { User } from '../model/User'
+import dbAccessToken, { AccessToken as Token } from '../model/AccessToken'
+import dbRefreshToken from '../model/RefreshToken'
 
 export default class OAuth2  {
   private server: NodeOAuthServer
@@ -26,7 +27,6 @@ export default class OAuth2  {
   }
 
   public getClient = (clientId: string, clientSecret: string, callback?: Callback<Client | Falsey>): Promise<Client | Falsey> => {
-    console.log('getClient', clientId, clientSecret)
     const config = {
       client_id: clientId,
       client_secret: clientSecret
@@ -40,7 +40,6 @@ export default class OAuth2  {
   }
 
   public getUser = (username: string, password: string, callback?: Callback<User | Falsey>): Promise<User | Falsey> => {
-    console.log('getUser', username, password)
     const config = {
       username
     }
@@ -57,6 +56,36 @@ export default class OAuth2  {
     return
   }
   public saveToken = (token: Token, client: Client, user: User, callback?: Callback<Token>): Promise<Token> => {
+    let promise = [
+      dbAccessToken.create({
+        access_token: token.accessToken,
+        expires: token.accessTokenExpiresAt,
+        client: client._id,
+        user: user._id,
+        scope: token.scope
+      })
+    ]
+    if (token.refreshToken) {
+      promise.push(
+        dbRefreshToken.create({ // no refresh token for client_credentials
+          refreshToken: token.refreshToken,
+          expires: token.refreshTokenExpiresAt,
+          client: client._id,
+          user: user._id,
+          scope: token.scope
+        })
+      )
+    }
+    return Promise.all(promise)
+      .then(() => {
+        return {
+          accessToken: token.accessToken,
+          refreshToken: token.refreshToken,
+          user,
+          client,
+          ...token
+        }
+      })
     console.log('saveToken', token, client, user)
     return
   }

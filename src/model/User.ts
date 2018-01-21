@@ -1,10 +1,12 @@
 import mongoose from './mongoose'
-import { Document } from 'mongoose';
+import { Document, Model } from 'mongoose'
 import {
   User as oauthUser
 } from 'oauth2-server'
 
-import Plugins from '../plugins/User'
+import Plugins, {
+  PluginsType
+} from '../plugins/User'
 
 const Schema = mongoose.Schema
 
@@ -13,7 +15,13 @@ const ObjectId = Schema.Types.ObjectId
 export interface User extends oauthUser, Document {
   id: string
   grants: string[]
+  age: number
+  name: string
+  create?: Date
+  description?: string
 }
+
+export interface UserModel extends Model<User>, PluginsType {}
 
 const userSchema = new Schema({
   nickname: {
@@ -97,5 +105,5 @@ const userSchema = new Schema({
 
 userSchema.plugin(Plugins)
 
-const user = mongoose.model<User>('user', userSchema)
+const user = mongoose.model<User>('user', userSchema) as UserModel
 export default user

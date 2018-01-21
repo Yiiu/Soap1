@@ -1,4 +1,4 @@
-export interface IMongodbConfig {
+export interface MongodbConfig {
   host: string
   port: 27017
   db: string
@@ -7,13 +7,13 @@ export interface IMongodbConfig {
   url: string
 }
 
-export interface IConfig {
+export interface Config {
   secret: string
   port: number
-  mongodb: IMongodbConfig
+  mongodb: MongodbConfig
 }
 
-const config: IConfig = {
+const config: Config = {
   mongodb: {
     host: 'localhost',
     port: 27017,

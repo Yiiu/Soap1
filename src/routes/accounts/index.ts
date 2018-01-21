@@ -3,7 +3,7 @@ import User from '../../model/User'
 
 const router = express.Router()
 
-router.get('/sigup', async (req, res) => {
+router.post('/signup', async (req, res, next) => {
   try {
     const { username, email, password } = req.body
     const user = await new User({ username, email })
@@ -13,3 +13,5 @@ router.get('/sigup', async (req, res) => {
     next(error)
   }
 })
+
+export default router
