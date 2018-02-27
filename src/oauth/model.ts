@@ -16,15 +16,10 @@ import {
 import dbClient, { Client } from '../model/Client'
 import dbUser, { User } from '../model/User'
 import dbAccessToken, { AccessToken as Token } from '../model/AccessToken'
-import dbRefreshToken from '../model/RefreshToken'
+import dbRefreshToken, { RefreshToken } from '../model/RefreshToken'
 
-export default class OAuth2  {
+export default class OAuth2 {
   private server: NodeOAuthServer
-
-  public getAccessToken = async (accessToken: string, callback?: Callback<Token>): Promise<Token> => {
-    console.log('getAccessToken', accessToken)
-    return
-  }
 
   public getClient = (clientId: string, clientSecret: string, callback?: Callback<Client | Falsey>): Promise<Client | Falsey> => {
     const config = {
@@ -51,10 +46,6 @@ export default class OAuth2  {
       })
   }
 
-  public saveAccessToken = (accessToken, clientId, expires, user: object, callback?: () => void) => {
-    console.log('saveAccessToken', accessToken, clientId, expires)
-    return
-  }
   public saveToken = (token: Token, client: Client, user: User, callback?: Callback<Token>): Promise<Token> => {
     let promise = [
       dbAccessToken.create({
@@ -86,7 +77,48 @@ export default class OAuth2  {
           ...token
         }
       })
-    console.log('saveToken', token, client, user)
+  }
+
+  // 校验RefreshToken的有效性
+  public revokeToken = (token: Token, callback?: Callback<boolean>): Promise<boolean> => {
+    return dbRefreshToken.findOne({
+      refreshToken: token.refreshToken
+    }).then((savedRT) => {
+      if (savedRT) {
+        if (savedRT.expires < new Date()) {
+          return false
+        } else {
+          return true
+        }
+      } else {
+        return false
+      }
+    });
+  };
+
+  public getRefreshToken = (refreshToken: string, callback?: Callback<RefreshToken>): Promise<RefreshToken> => {
+    return dbRefreshToken
+      .findOne({refreshToken})
+      .populate('user')
+      .populate('client')
+      .then((savedRT) => {
+        return {
+          user: savedRT ? savedRT.user : {},
+          client: savedRT ? savedRT.client : {},
+          expires: savedRT ? new Date(savedRT.expires) : null,
+          refreshToken,
+          scope: savedRT.scope
+        };
+      });
+  };
+
+  public getAccessToken = async (accessToken: string, callback?: Callback<Token>): Promise<Token> => {
+    console.log('getAccessToken', accessToken)
+    return
+  }
+
+  public saveAccessToken = (accessToken, clientId, expires, user: object, callback?: () => void) => {
+    console.log('saveAccessToken', accessToken, clientId, expires)
     return
   }
 

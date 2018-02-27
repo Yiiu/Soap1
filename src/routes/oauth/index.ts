@@ -11,6 +11,8 @@ router.all('/token', async (req, res, next) => {
   const response = new oauthServer.Response(res);
   try {
     let token = await oauth.token(request, response)
+    delete token.user.hash
+    delete token.user.salt
     delete token.client
     return res.json(token)
   } catch (err) {
