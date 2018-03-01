@@ -60,6 +60,12 @@
   dependencies:
     "@types/express" "*"
 
+"@types/multer@^1.3.6":
+  version "1.3.6"
+  resolved "https://registry.npmjs.org/@types/multer/-/multer-1.3.6.tgz#e00454074bf9fd86d20ea652eba9850eb76604c4"
+  dependencies:
+    "@types/express" "*"
+
 "@types/node@*":
   version "9.4.6"
   resolved "http://registry.npm.taobao.org/@types/node/download/@types/node-9.4.6.tgz#d8176d864ee48753d053783e4e463aec86b8d82e"
