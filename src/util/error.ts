@@ -12,7 +12,7 @@ export class ApiError {
   public status: number
   public error: any
   public message: null | string
-  constructor (status, message = null, err = null) {
+  constructor (status: number, message: string | null = null, err: any = null) {
     this.status = status
     if (err) {
       this.error = err

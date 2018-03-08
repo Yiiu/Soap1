@@ -12,11 +12,15 @@ const Schema = mongoose.Schema
 
 const ObjectId = Schema.Types.ObjectId
 
+export interface UserInterface {
+  [key: string]: any
+}
+
 export interface User extends oauthUser, Document {
   id: string
-  grants: string[]
-  age: number
-  name: string
+  grants?: string[]
+  age?: number
+  name?: string
   create?: Date
   description?: string
 }

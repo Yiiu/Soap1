@@ -21,33 +21,33 @@ import dbRefreshToken, { RefreshToken } from '../model/RefreshToken'
 export default class OAuth2 {
   private server: NodeOAuthServer
 
-  public getClient = (clientId: string, clientSecret: string, callback?: Callback<Client | Falsey>): Promise<Client | Falsey> => {
+  public getClient = async (clientId: string, clientSecret: string, callback?: Callback<Client | Falsey>):
+    Promise<Client | Falsey> => {
     const config = {
       client_id: clientId,
       client_secret: clientSecret
     }
-    return dbClient.findOne(config)
-      .then(e => e)
-      .catch((err) => {
-        console.log('getClient - Err: ', err)
-        return null
-      })
+    return await dbClient.findOne(config)
   }
 
-  public getUser = (username: string, password: string, callback?: Callback<User | Falsey>): Promise<User | Falsey> => {
+  public getUser = async (
+    username: string,
+    password: string,
+    callback?: Callback<User | Falsey>
+  ): Promise<User | Falsey> => {
     const config = {
       username
     }
-    return dbUser.findOne(config)
-      .then(e => e)
-      .catch((err) => {
-        console.log('getClient - Err: ', err)
-        return null
-      })
+    return await dbUser.findOne(config)
   }
 
-  public saveToken = (token: Token, client: Client, user: User, callback?: Callback<Token>): Promise<Token> => {
-    let promise = [
+  public saveToken = (
+    token: Token,
+    client: Client,
+    user: User,
+    callback?: Callback<Token>
+  ): Promise<Token> => {
+    const promise = [
       dbAccessToken.create({
         access_token: token.accessToken,
         expires: token.accessTokenExpiresAt,
@@ -126,7 +126,12 @@ export default class OAuth2 {
     console.log('verifyScope', token, scope)
     return
   }
-  public saveAuthorizationCode = (code: AuthorizationCode, client: Client, user: User, callback?: Callback<AuthorizationCode>): Promise<AuthorizationCode> => {
+  public saveAuthorizationCode = (
+    code: AuthorizationCode,
+    client: Client,
+    user: User,
+    callback?: Callback<AuthorizationCode>
+  ): Promise<AuthorizationCode> => {
     console.log('verifyScope', code, client, user)
     return
   }

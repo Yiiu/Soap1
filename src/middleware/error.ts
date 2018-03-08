@@ -1,8 +1,9 @@
 import { ApiError, ValidationError } from '../util'
+import { Request, Response, NextFunction } from 'express'
 
 type errorType = ApiError | ValidationError | Error
 
-export function handleError (error: errorType , req, res, next) {
+export function handleError (error: errorType , req: Request, res: Response, next: NextFunction) {
   if (error instanceof ValidationError) {
     res.status(400).json(error)
   } else if (error instanceof ApiError) {
