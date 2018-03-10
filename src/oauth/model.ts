@@ -41,6 +41,19 @@ export default class OAuth2 {
     return await dbUser.findOne(config)
   }
 
+  public getAccessToken = async (accessToken: string, callback?: Callback<Token>): Promise<Token> => {
+    const data = await dbAccessToken
+      .findOne({accessToken: accessToken})
+      .populate('user')
+      .populate('client')
+    if (data) {
+      data.accessTokenExpiresAt = new Date(data.expires)
+    } else {
+      return null
+    }
+    return data
+  }
+
   public saveToken = (
     token: Token,
     client: Client,
@@ -49,7 +62,7 @@ export default class OAuth2 {
   ): Promise<Token> => {
     const promise = [
       dbAccessToken.create({
-        access_token: token.accessToken,
+        accessToken: token.accessToken,
         expires: token.accessTokenExpiresAt,
         client: client._id,
         user: user._id,
@@ -111,11 +124,6 @@ export default class OAuth2 {
         };
       });
   };
-
-  public getAccessToken = async (accessToken: string, callback?: Callback<Token>): Promise<Token> => {
-    console.log('getAccessToken', accessToken)
-    return
-  }
 
   public saveAccessToken = (accessToken, clientId, expires, user: object, callback?: () => void) => {
     console.log('saveAccessToken', accessToken, clientId, expires)

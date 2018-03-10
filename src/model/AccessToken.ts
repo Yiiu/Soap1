@@ -5,8 +5,6 @@ import {
 } from 'oauth2-server'
 
 export interface AccessToken {
-  refreshToken?: string;
-  refreshTokenExpiresAt?: Date;
   accessToken: string
   expires?: Date
   scope?: string

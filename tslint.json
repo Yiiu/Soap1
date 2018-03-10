@@ -21,7 +21,6 @@
         "eofline": false,
         "forin": true,
         "indent": [ true, "spaces" ],
-        "interface-name": [true],
         "jsdoc-format": true,
         "jsx-no-lambda": false,
         "jsx-no-multiline-js": false,
@@ -99,7 +98,8 @@
         "ordered-imports": [false],
         "no-string-throw": [false],
         "space-before-function-paren": [true, "always"],
-        "interface-name": [true, "never-prefix"]
+        "interface-name": [true, "never-prefix"],
+        "object-literal-shorthand": false
     },
     "rulesDirectory": []
 }
