@@ -1,5 +1,5 @@
 
-import * as oauthServer from 'oauth2-server'
+import oauthServer from './oauth'
 import model from './model'
 
 export default new oauthServer({

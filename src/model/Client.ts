@@ -1,13 +1,17 @@
 import mongoose from './mongoose'
 import { Document } from 'mongoose';
-import {
-  Client as oauthClient
-} from 'oauth2-server'
 
-export interface Client extends oauthClient, Document {
-  id: string
+export interface Client {
+  _id: any;
+  client_name: string
+  client_secret: string
+  client_id: string
+  grant_types: string
   grants: string[]
+  redirect_uri: string
 }
+
+export interface ClientModel extends Client, Document {}
 
 const Schema = mongoose.Schema
 
@@ -18,13 +22,12 @@ const clientSchema = new Schema({
   client_id: String,
   grant_types: String,
   grants: Array,
-  redirect_uri: String,
-  id: String,
+  redirect_uri: String
 }, {
   toJSON: {
     virtuals: true
   }
 })
 
-const client = mongoose.model<Client>('client', clientSchema)
+const client = mongoose.model<ClientModel>('client', clientSchema)
 export default client

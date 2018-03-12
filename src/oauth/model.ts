@@ -1,5 +1,7 @@
 import * as NodeOAuthServer from 'oauth2-server'
 
+import { Falsey } from './oauth'
+
 import {
   AuthorizationCodeModel,
   ClientCredentialsModel,
@@ -9,7 +11,6 @@ import {
   PasswordModel,
   ExtensionModel,
   Callback,
-  Falsey,
   AuthorizationCode
 } from 'oauth2-server'
 
@@ -21,7 +22,7 @@ import dbRefreshToken, { RefreshToken } from '../model/RefreshToken'
 export default class OAuth2 {
   private server: NodeOAuthServer
 
-  public getClient = async (clientId: string, clientSecret: string, callback?: Callback<Client | Falsey>):
+  public getClient = async (clientId: string, clientSecret: string):
     Promise<Client | Falsey> => {
     const config = {
       client_id: clientId,
