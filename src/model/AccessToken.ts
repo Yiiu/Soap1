@@ -1,10 +1,7 @@
 import mongoose from './mongoose'
 import { Document, Model } from 'mongoose'
-import {
-  Token as oauthToken
-} from 'oauth2-server'
 
-export interface AccessToken {
+export interface AccessToken extends Document {
   accessToken: string
   expires?: Date
   scope?: string
@@ -13,9 +10,7 @@ export interface AccessToken {
   [key: string]: any
 }
 
-export interface AccessTokenType extends Document, oauthToken {}
-
-export interface AccessTokenModel extends Model<AccessTokenType> {}
+export interface AccessTokenModel extends Model<AccessToken> {}
 
 const Schema = mongoose.Schema
 
@@ -39,5 +34,5 @@ const tokenSchema = new Schema({
   }
 })
 
-const accessToken = mongoose.model<AccessTokenType>('access_token', tokenSchema) as AccessTokenModel
+const accessToken = mongoose.model<AccessToken>('access_token', tokenSchema) as AccessTokenModel
 export default accessToken

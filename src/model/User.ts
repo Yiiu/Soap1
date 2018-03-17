@@ -1,8 +1,5 @@
 import mongoose from './mongoose'
 import { Document, Model } from 'mongoose'
-import {
-  User as oauthUser
-} from 'oauth2-server'
 
 import Plugins, {
   PluginsType
@@ -16,8 +13,7 @@ export interface UserInterface {
   [key: string]: any
 }
 
-export interface User extends oauthUser, Document {
-  id: string
+export interface User extends Document {
   grants?: string[]
   age?: number
   name?: string

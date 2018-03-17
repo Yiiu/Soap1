@@ -1,11 +1,8 @@
 import mongoose from './mongoose'
 import { Document, Model } from 'mongoose'
-import {
-  Token as oauthToken
-} from 'oauth2-server'
 
 export interface RefreshToken {
-  refreshToken: any
+  refreshToken?: any
   expires?: Date
   scope?: string
   user: any
@@ -13,9 +10,9 @@ export interface RefreshToken {
   [key: string]: any
 }
 
-export interface RefreshTokenType extends Document, oauthToken {}
+export interface RefreshTokenDocument extends RefreshToken, Document {}
 
-export interface RefreshTokenModel extends Model<RefreshTokenType> {}
+export interface RefreshTokenModel extends Model<RefreshTokenDocument> {}
 
 const Schema = mongoose.Schema
 
@@ -39,5 +36,5 @@ const tokenSchema = new Schema({
   }
 })
 
-const accessToken = mongoose.model<RefreshTokenType>('refresh_token', tokenSchema) as RefreshTokenModel
-export default accessToken
+const refreshToken = mongoose.model<RefreshTokenDocument>('refresh_token', tokenSchema) as RefreshTokenModel
+export default refreshToken

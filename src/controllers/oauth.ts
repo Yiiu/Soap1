@@ -1,4 +1,3 @@
-import * as oauthServer from 'oauth2-server'
 import { ApiError } from '../util'
 import { UserInterface } from '../model/User'
 
@@ -18,10 +17,9 @@ async function isUser (user: UserInterface, password: string) {
 }
 
 export const token = async (req, res, next) => {
-  const request = new oauthServer.Request(req);
-  const response = new oauthServer.Response(res);
   try {
-    await oauth.token(request, response)
+    const token = await oauth.token(req, res)
+    return res.json(token)
     // await isUser(user, req.body.password)
     // delete user.hash
     // delete user.salt
@@ -50,6 +48,7 @@ export const token = async (req, res, next) => {
     //   refreshTokenExpiresAt
     // })
   } catch (err) {
-    return next(new ApiError(401, `oauth_${err.name}`))
+    console.log(err)
+    return next(err)
   }
 }

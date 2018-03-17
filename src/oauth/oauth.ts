@@ -1,10 +1,14 @@
 import { Model } from 'mongoose';
 import TokenHandles from './handles/token'
 
+import { Imodel } from './handles/token'
+
 export type Falsey = '' | 0 | false | null | undefined;
 
 export interface OauthConfig {
-  model: any
+  model: Imodel
+  accessTokenLifetime?: number
+  refreshTokenLifetime?: number
 }
 
 export default class Oauth {
@@ -13,8 +17,8 @@ export default class Oauth {
     this.options = config
   }
 
-  public token = (req, res) => {
+  public token = async (req, res) => {
     const Token = new TokenHandles(this.options)
-    Token.handle(req, res)
+    return await Token.handle(req, res)
   }
 }

@@ -1,29 +1,16 @@
 import * as NodeOAuthServer from 'oauth2-server'
 
 import { Falsey } from './oauth'
-
-import {
-  AuthorizationCodeModel,
-  ClientCredentialsModel,
-  ServerOptions,
-  OAuth2Server,
-  RefreshTokenModel,
-  PasswordModel,
-  ExtensionModel,
-  Callback,
-  AuthorizationCode
-} from 'oauth2-server'
-
+import { Imodel } from './handles/token'
 import dbClient, { Client } from '../model/Client'
 import dbUser, { User } from '../model/User'
 import dbAccessToken, { AccessToken as Token } from '../model/AccessToken'
 import dbRefreshToken, { RefreshToken } from '../model/RefreshToken'
 
-export default class OAuth2 {
+export default class OAuth2 implements Imodel {
   private server: NodeOAuthServer
 
-  public getClient = async (clientId: string, clientSecret: string):
-    Promise<Client | Falsey> => {
+  public getClient = async (clientId, clientSecret) => {
     const config = {
       client_id: clientId,
       client_secret: clientSecret
@@ -31,18 +18,14 @@ export default class OAuth2 {
     return await dbClient.findOne(config)
   }
 
-  public getUser = async (
-    username: string,
-    password: string,
-    callback?: Callback<User | Falsey>
-  ): Promise<User | Falsey> => {
+  public getUser = async (username, password) => {
     const config = {
       username
     }
-    return await dbUser.findOne(config)
+    return await dbUser.findOne(config).select('-salt -hash')
   }
 
-  public getAccessToken = async (accessToken: string, callback?: Callback<Token>): Promise<Token> => {
+  public getAccessToken = async (accessToken: string): Promise<Token> => {
     const data = await dbAccessToken
       .findOne({accessToken: accessToken})
       .populate('user')
@@ -56,32 +39,25 @@ export default class OAuth2 {
   }
 
   public saveToken = (
-    token: Token,
-    client: Client,
-    user: User,
-    callback?: Callback<Token>
-  ): Promise<Token> => {
+    token,
+    client,
+    user
+  ) => {
     const promise = [
       dbAccessToken.create({
         accessToken: token.accessToken,
         expires: token.accessTokenExpiresAt,
         client: client._id,
-        user: user._id,
-        scope: token.scope
+        user: user._id
+      }),
+      dbRefreshToken.create({ // no refresh token for client_credentials
+        refreshToken: token.refreshToken,
+        expires: token.refreshTokenExpiresAt,
+        client: client._id,
+        user: user._id
       })
     ]
-    if (token.refreshToken) {
-      promise.push(
-        dbRefreshToken.create({ // no refresh token for client_credentials
-          refreshToken: token.refreshToken,
-          expires: token.refreshTokenExpiresAt,
-          client: client._id,
-          user: user._id,
-          scope: token.scope
-        })
-      )
-    }
-    return Promise.all(promise)
+    return Promise.all<any>(promise)
       .then(() => {
         return {
           accessToken: token.accessToken,
@@ -94,7 +70,8 @@ export default class OAuth2 {
   }
 
   // 校验RefreshToken的有效性
-  public revokeToken = (token: Token, callback?: Callback<boolean>): Promise<boolean> => {
+  public revokeToken = (token: Token) => {
+    console.log(token)
     return dbRefreshToken.findOne({
       refreshToken: token.refreshToken
     }).then((savedRT) => {
@@ -110,19 +87,25 @@ export default class OAuth2 {
     });
   };
 
-  public getRefreshToken = (refreshToken: string, callback?: Callback<RefreshToken>): Promise<RefreshToken> => {
+  public getRefreshToken = (refreshToken: string) => {
     return dbRefreshToken
       .findOne({refreshToken})
-      .populate('user')
+      .populate({
+        path: 'user',
+        select: '-salt -hash'
+      })
       .populate('client')
       .then((savedRT) => {
-        return {
-          user: savedRT ? savedRT.user : {},
-          client: savedRT ? savedRT.client : {},
-          expires: savedRT ? new Date(savedRT.expires) : null,
-          refreshToken,
-          scope: savedRT.scope
-        };
+        if (savedRT) {
+          return {
+            user: savedRT ? savedRT.user : {},
+            client: savedRT ? savedRT.client : {},
+            expires: savedRT ? new Date(savedRT.expires) : null,
+            refreshToken
+          };
+        } else {
+          return null
+        }
       });
   };
 
@@ -131,17 +114,17 @@ export default class OAuth2 {
     return
   }
 
-  public verifyScope = (token: Token, scope: string, callback?: Callback<boolean>): Promise<boolean> => {
+  public verifyScope = (token: Token, scope: string): Promise<boolean> => {
     console.log('verifyScope', token, scope)
     return
   }
-  public saveAuthorizationCode = (
-    code: AuthorizationCode,
-    client: Client,
-    user: User,
-    callback?: Callback<AuthorizationCode>
-  ): Promise<AuthorizationCode> => {
-    console.log('verifyScope', code, client, user)
-    return
-  }
+  // public saveAuthorizationCode = (
+  //   code: AuthorizationCode,
+  //   client: Client,
+  //   user: User,
+  //   callback?: Callback<AuthorizationCode>
+  // ): Promise<AuthorizationCode> => {
+  //   console.log('verifyScope', code, client, user)
+  //   return
+  // }
 }
