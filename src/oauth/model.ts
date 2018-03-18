@@ -1,7 +1,6 @@
 import * as NodeOAuthServer from 'oauth2-server'
 
-import { Falsey } from './oauth'
-import { Imodel } from './handles/token'
+import { Falsey, Imodel } from './oauth'
 import dbClient, { Client } from '../model/Client'
 import dbUser, { User } from '../model/User'
 import dbAccessToken, { AccessToken as Token } from '../model/AccessToken'
@@ -28,7 +27,10 @@ export default class OAuth2 implements Imodel {
   public getAccessToken = async (accessToken: string): Promise<Token> => {
     const data = await dbAccessToken
       .findOne({accessToken: accessToken})
-      .populate('user')
+      .populate({
+        path: 'user',
+        select: '-salt -hash'
+      })
       .populate('client')
     if (data) {
       data.accessTokenExpiresAt = new Date(data.expires)

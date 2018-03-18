@@ -1,43 +1,11 @@
 import { Request, Response } from 'express';
 import * as auth from 'basic-auth'
 
+import { Imodel } from '../oauth'
 import { ApiError } from '../../util/error'
 import { OauthConfig } from './../oauth';
 import passwordType from '../grantTypes/passwordType'
 import refreshToken from '../grantTypes/refreshToken'
-
-import { AccessToken as AccessTokenInterface } from '../../model/AccessToken'
-import { RefreshToken as RefreshTokenInterface } from '../../model/RefreshToken'
-import { User as UserInterface } from '../../model/User'
-import { Client as ClientInterface } from '../../model/Client'
-import { Falsey } from '../oauth'
-
-export interface TokenInterface {
-  accessToken: string
-  refreshToken: string
-  accessTokenExpiresAt: Date
-  refreshTokenExpiresAt: Date
-  [key: string]: any
-}
-export interface Imodel {
-  getUser: (
-    username: string,
-    password: string
-  ) => Promise<UserInterface | Falsey>
-  getClient: (
-    clientId: string,
-    clientSecret: string
-  ) => Promise<ClientInterface | Falsey>
-  saveToken: (
-    token: TokenInterface,
-    client: ClientInterface,
-    user: UserInterface
-  ) => Promise<TokenInterface | Falsey>
-  getRefreshToken: (
-    refreshToken: string
-  ) => Promise<RefreshTokenInterface | Falsey>
-  revokeToken: (token: AccessTokenInterface) => Promise<boolean>
-}
 
 const grantTypes = {
   password: passwordType,

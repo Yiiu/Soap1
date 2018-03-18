@@ -6,7 +6,7 @@ import oauth from './oauth'
 import connect from './model'
 import config from './config'
 import routes from './routes'
-import { handleError } from './middleware'
+import { handleError, model } from './middleware'
 
 const app = express()
 
@@ -29,6 +29,7 @@ export default async () => {
       next()
     })
 
+    app.use(model())
     app.use('/', routes)
     app.use(handleError)
 

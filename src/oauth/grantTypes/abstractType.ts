@@ -1,6 +1,6 @@
 import * as crypto from 'crypto'
 
-import { Imodel } from '../handles/token'
+import { Imodel } from '../oauth'
 
 export default class AbstractType {
   public model: Imodel
