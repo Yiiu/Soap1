@@ -73,7 +73,6 @@ export default class OAuth2 implements Imodel {
 
   // 校验RefreshToken的有效性
   public revokeToken = (token: Token) => {
-    console.log(token)
     return dbRefreshToken.findOne({
       refreshToken: token.refreshToken
     }).then((savedRT) => {

@@ -29,7 +29,7 @@ export default async () => {
       next()
     })
 
-    app.use(model())
+    // app.use(model())
     app.use('/', routes)
     app.use(handleError)
 

@@ -48,7 +48,6 @@ export const token = async (req, res, next) => {
     //   refreshTokenExpiresAt
     // })
   } catch (err) {
-    console.log(err)
     return next(err)
   }
 }
