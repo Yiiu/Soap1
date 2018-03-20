@@ -1,5 +1,3 @@
-import * as NodeOAuthServer from 'oauth2-server'
-
 import { Falsey, Imodel } from './oauth'
 import dbClient, { Client } from '../model/Client'
 import dbUser, { User } from '../model/User'
@@ -7,7 +5,6 @@ import dbAccessToken, { AccessToken as Token } from '../model/AccessToken'
 import dbRefreshToken, { RefreshToken } from '../model/RefreshToken'
 
 export default class OAuth2 implements Imodel {
-  private server: NodeOAuthServer
 
   public getClient = async (clientId, clientSecret) => {
     const config = {

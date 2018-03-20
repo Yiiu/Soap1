@@ -26,7 +26,6 @@ export function qiniuUpload () {
             ...req.file,
             ...respBody
           }
-          console.log(req.file)
           next()
         } else {
           next(respInfo)
@@ -36,5 +35,4 @@ export function qiniuUpload () {
       next('no_file')
     }
   }
-  console.log(123123)
 }
