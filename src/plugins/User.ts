@@ -5,17 +5,14 @@ import {
   ApiError
 } from '../util'
 
-import { User } from '../model'
+import User, { UserInterface } from '../model/User'
 
 export interface PluginsType {
   signup: (user: object, pwd: string) => void
 }
 
 export default function (schema: Schema) {
-  schema.statics.signup = async function (user, pwd) {
-    if (!(user in this)) {
-      user = new this(user)
-    }
+  schema.statics.signup = async function (user: UserInterface, pwd: string) {
     const userByName  = await this.findOne({ username: user.username })
     const userByEmail  = await this.findOne({ email: user.email })
     if (userByName) {
@@ -33,7 +30,6 @@ export default function (schema: Schema) {
     const hash = await crypto.pbkdf2Sync(pwd, salt, 20, 32, 'sha512').toString('hex')
     user.salt = salt
     user.hash = hash
-    // user.likeSchema = await Like.create({ user: user._id, photo: [] })
     await user.save()
     return true
   }

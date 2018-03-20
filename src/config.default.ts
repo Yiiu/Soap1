@@ -11,6 +11,7 @@ export interface Config {
   secret: string
   port: number
   mongodb: MongodbConfig
+  qn: any
 }
 
 const config: Config = {
@@ -21,6 +22,12 @@ const config: Config = {
     username: 'soap',
     pwd: 'soap',
     url: ''
+  },
+  qn: {
+    accessKey: '123123',
+    secretKey: '123123',
+    bucket: '1',
+    origin: 'up.qiniu.com'
   },
   secret: 'yiiu',
   port: 2333
