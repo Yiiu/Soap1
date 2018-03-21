@@ -4,6 +4,7 @@ import config from '../config'
 import Client from './Client.js'
 import User from './User'
 import AccessToken from './AccessToken'
+import Picture from './Picture'
 
 export default async () => {
   return await mongoose.connect(
@@ -14,5 +15,6 @@ export default async () => {
 export {
   User,
   Client,
-  AccessToken
+  AccessToken,
+  Picture
 }

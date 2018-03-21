@@ -26,7 +26,6 @@ export default function (schema: Schema) {
   schema.methods.setPassword = async (user, pwd) => {
     // 生成随机数
     const salt = await crypto.randomBytes(32).toString('hex')
-    console.log(user, pwd, salt)
     const hash = await crypto.pbkdf2Sync(pwd, salt, 20, 32, 'sha512').toString('hex')
     user.salt = salt
     user.hash = hash
