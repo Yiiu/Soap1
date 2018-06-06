@@ -20,7 +20,7 @@ router.post('/', isAuthenticated, upload.single('photo'), qiniuUpload(), async (
       width: metadata.width,
       height: metadata.height,
     },
-    user: req.auth._id,
+    user: req.auth.user._id,
     key: req.file.key,
     exif: null,
     location: null
@@ -30,12 +30,12 @@ router.post('/', isAuthenticated, upload.single('photo'), qiniuUpload(), async (
     data.exif = {
       make: exif.image.Make,
       model: exif.image.Model,
-      exposure_time: exif.exif.ExposureTime,
-      aperture: exif.exif.FNumber,
-      ios: exif.exif.ISO,
-      date_time_original: exif.exif.DateTimeOriginal,
-      flash: exif.exif.Flash,
-      focal_length: exif.exif.FocalLength
+      exposure_time: exif.exif && exif.exif.ExposureTime,
+      aperture: exif.exif && exif.exif.FNumber,
+      ios: exif.exif && exif.exif.ISO,
+      date_time_original: exif.exif && exif.exif.DateTimeOriginal,
+      flash: exif.exif && exif.exif.Flash,
+      focal_length: exif.exif && exif.exif.FocalLength
     }
     if (exif.gps) {
       data.location = {
