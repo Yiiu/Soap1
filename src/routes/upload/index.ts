@@ -27,15 +27,14 @@ router.post('/', isAuthenticated, upload.single('photo'), qiniuUpload(), async (
   }
   if (metadata.exif) {
     const exif = exifInfo(metadata.exif)
-    data.exif = {
-      make: exif.image.Make,
-      model: exif.image.Model,
-      exposure_time: exif.exif && exif.exif.ExposureTime,
-      aperture: exif.exif && exif.exif.FNumber,
-      ios: exif.exif && exif.exif.ISO,
-      date_time_original: exif.exif && exif.exif.DateTimeOriginal,
-      flash: exif.exif && exif.exif.Flash,
-      focal_length: exif.exif && exif.exif.FocalLength
+    data.exif = {}
+    if (exif.exif) {
+       data.exif.exposure_time = exif.exif.ExposureTime,
+       data.exif.aperture = exif.exif.FNumber,
+       data.exif.ios = exif.exif.ISO,
+       data.exif.date_time_original = exif.exif.DateTimeOriginal,
+       data.exif.flash = exif.exif.Flash,
+       data.exif.focal_length = exif.exif.FocalLength
     }
     if (exif.gps) {
       data.location = {
@@ -43,6 +42,8 @@ router.post('/', isAuthenticated, upload.single('photo'), qiniuUpload(), async (
         longitude: exif.gps.GPSLongitude
       }
     }
+    data.exif.make = exif.image.Make,
+    data.exif.model = exif.image.Model
   }
   const newPicture = await new Picture(data).save()
   return res.json({

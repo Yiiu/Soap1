@@ -8,7 +8,8 @@ export interface Picture {
   location: any
   description: string
   info: string
-  exif: string[]
+  exif: any
+  key: string
   user: any
   views: number
   likes: number

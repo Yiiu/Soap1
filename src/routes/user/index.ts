@@ -5,7 +5,7 @@ import { User } from '../../model'
 
 const router = express.Router()
 
-router.get('/me', isAuthenticated, async (req, res, next) => {
+router.get('/me', isAuthenticated, async (req, res) => {
   const user = await User.findById(req.auth.user._id).select('-hash -salt')
   res.json(user)
 });
